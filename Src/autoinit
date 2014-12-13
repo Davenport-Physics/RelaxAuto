@@ -1,5 +1,5 @@
 #This is a comment
-find name
+find name #this is a comment
 
 #This is the file
 file analysis.txt
@@ -11,3 +11,10 @@ file analysis.txt
 username mad_max
 
 #maximum iterations
+max_iterations 20
+
+#volume difference
+volume_difference .5
+
+#whether the program will print out data as it automates
+verbose True

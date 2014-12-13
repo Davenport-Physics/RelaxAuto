@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  main.py
+#  strmanipulation.py
 #  
 #  Copyright 2014 Michael Davenport <Davenport.physics@gmail.com>
 #  
@@ -21,38 +21,55 @@
 #  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-# 
+#   
 
-from auto import *
-from calls import *  
-
-from time import sleep
-
-def main():
+def get_char_index(character, string):
 	
-	obj = Auto()
-	
-	#obj.print_lines()
-	
-	for x in range(obj.get_max_iterations()):
+	for i in range(len(string)):
 		
-		make_bsub_job()
+		if string[i] == character:
+			
+			return i
+
+def delete_extra_spaces(string):
+	
+	for i in range(len(string)-1 ,0 , -1):
 		
-		while obj.check_if_job_finished() != True:
+		if string[i] != ' ':
 			
-			sleep(.1)
+			return string[:(i + 1)]
 			
-		if obj.check_volume_difference() == True:
-			
-			break;
-			
+def delete_tabs(string):
 	
-	print("Automated Relaxation finished")
+	i = 0
+	while i < len(string):
+		
+		try:
+			
+			if string[i] == '\\' and string[i+1] == 't':
+			
+				string = string[i+2:len(string)]
+				i = 0
+				
+			else:
+				
+				i += 1
+			
+		except:
+			
+			pass
+			
+	return string
+		
+def get_attribute_substring(StartIndex , x):
 	
-	
-	return 0
-
-
-
-if __name__ == '__main__':
-	main()
+	for i in range(StartIndex, len(x)):
+		
+		if x[i] == ' ':
+			
+			continue
+			
+		else:
+			
+			return x[i:len(x)-1]
+			

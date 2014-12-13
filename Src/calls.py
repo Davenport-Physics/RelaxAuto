@@ -54,17 +54,38 @@ def call_grep(GrepAttribute,Filename):
 				temp = x + 2
 				
 	return lines
+	
+def delete_file(filename):
+	
+	if '-rf' in filename or '*' in filename:
+		
+		print("Error, -rf or * command found in filename.\nExiting program")
+		exit(1)
+		
+	else:
+		
+		try:
+			
+			command	= "rm " + str(filename)
+			hold	= str(sp.checkout_output(command,shell=True))
+		
+		except:
+			
+			print("Invalid filename most likely")
+			
 
 def make_bsub_job():
 		
 	try:
 			
 		command	= "bsub<job"
-		hold	= ""
+		hold	= str(sp.check_output(command,shell=True))
 			
 	except:
 			
-		print("Failed")
+		print("Failed creating bsub job")
+		
+	return hold
 		
 def call_bsub_jobs():
 		
@@ -77,4 +98,5 @@ def call_bsub_jobs():
 			
 		print("Failed to call bsub. Make sure it is installed")
 		
+	return hold
 

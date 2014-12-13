@@ -24,8 +24,9 @@
 #  
 
 from calls import *
+from strmanipulation import *
 	
-class auto(object):
+class Auto(object):
 	
 	def __init__(self):
 		
@@ -33,6 +34,10 @@ class auto(object):
 		self.determine_init_attributes()
 	
 		self.lines = call_grep(self.GrepAttribute,self.Filename)
+		
+		for x in range(len(self.lines)):
+			
+			self.lines[x] = delete_tabs(self.lines[x])
 					
 					
 	def read_init_file(self):
@@ -66,6 +71,9 @@ class auto(object):
 		
 		self.Username			= False
 		UsernameFound			= False
+		
+		self.Verbose			= False
+		VerboseFound			= False
 		
 		for x in self.InitData:
 			
@@ -144,7 +152,8 @@ class auto(object):
 				else:
 					
 					print("Too many max_iterations defined")
-				
+			
+			#TODO volume difference needs a function to call	
 			elif 'volume_difference' in x:
 				
 				if VolumeDifferenceFound == False:
@@ -167,7 +176,8 @@ class auto(object):
 				else:
 					
 					print("Too many volume difference attributes")
-				
+			
+			#TODO jobfile needs to be implemented
 			elif 'jobfile' in x:
 				
 				if JobFileFound == False:
@@ -178,6 +188,25 @@ class auto(object):
 				else:
 					
 					print("Too many Job attributes")
+			
+			#TODO Needs to be implemented throughout the code		
+			elif 'verbose' in x:
+				
+				if VerboseFound == False:
+					
+					VerboseFound 		= True
+					
+					try:
+						
+						self.Verbose	= bool(get_attribute_substring(len('verbose') , x))
+						
+					except:
+						
+						print("Please be sure to capitalize the first letter in True or False")
+					
+				else:
+					
+					print("Too many verbose attributes found")
 					
 					
 	#checks to make that specific attributes are within the autoinit
@@ -200,41 +229,47 @@ class auto(object):
 		if QuitProgram == True:
 			
 			print("Please add these attributes to autoinit before runtime")
-			quit(1) 
+			quit(1)
+			
+	
+	def get_max_iterations(self):
+		
+		return self.MaxIterations
+		
+	def check_if_job_finished(self):
+		
+		lines = call_bsub_jobs()
+		
+		for x in lines:
+			
+			if self.Username in x:
+				
+				return True
+		
+		return False
+		
+	def check_volume_difference(self):
+		
+		lines = call_grep(self.GrepAttribute,self.Filename)
+		
+		if (lines[0] - lines[len(lines)-1]) > self.VolumeDifference:
+			
+			return False
+			
+		else:
+			
+			return True
 		
 	#Prints every line within the lines variable to the terminal
 	def print_lines(self):
 		
-		for x in self.lines:
+		try:
 			
-			print(x)
+			for x in self.lines:
+			
+				print(x)
+				
+		except:
+			
+			print("Grep was probably never called")
 
-
-def get_char_index(character, string):
-	
-	for i in range(len(string)):
-		
-		if string[i] == character:
-			
-			return i
-
-def delete_extra_spaces(string):
-	
-	for i in range(len(string)-1 ,0 , -1):
-		
-		if string[i] != ' ':
-			
-			return string[:(i + 1)]
-		
-def get_attribute_substring(StartIndex , x):
-	
-	for i in range(StartIndex, len(x)):
-		
-		if x[i] == ' ':
-			
-			continue
-			
-		else:
-			
-			return x[i:len(x)-1]
-			
