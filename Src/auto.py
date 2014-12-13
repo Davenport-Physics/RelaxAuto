@@ -62,19 +62,26 @@ class auto(object):
 		VolumeDifferenceFound	= False
 		
 		self.MaxIterations		= False
-		self.MaxIterationsFound	= False
+		MaxIterationsFound		= False
+		
+		self.Username			= False
+		UsernameFound			= False
 		
 		for x in self.InitData:
 			
-			#If there is a pound symbol within the line
-			#the entire line is considered a comment
-			#Later on I might change this, but for the moment
-			#this suffices.
+			#You can now have comments anywhere
 			if '#' in x:
 				
-				continue
+				if x[0] == '#':
+					
+					continue
+					
+				else:
 				
-			elif 'find' in x:
+					i = get_char_index('#',x)
+					x = str(delete_extra_spaces(x[:i]))
+				
+			if 'find' in x:
 				
 				#This portion of the code determines the grep command
 				#it is not complex and makes the assumption that between
@@ -106,7 +113,15 @@ class auto(object):
 				
 			elif 'username' in x:
 				
-				print("Username not implemented\n")
+				if UsernameFound == False:
+					
+					UsernameFound = True
+					self.Username = get_attribute_substring(len('username'), x)
+					
+				else:
+					
+					print("Too many usernames found")
+				
 				
 			elif 'max_iterations' in x:
 				
@@ -194,6 +209,22 @@ class auto(object):
 			
 			print(x)
 
+
+def get_char_index(character, string):
+	
+	for i in range(len(string)):
+		
+		if string[i] == character:
+			
+			return i
+
+def delete_extra_spaces(string):
+	
+	for i in range(len(string)-1 ,0 , -1):
+		
+		if string[i] != ' ':
+			
+			return string[:(i + 1)]
 		
 def get_attribute_substring(StartIndex , x):
 	
