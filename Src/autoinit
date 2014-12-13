@@ -1,0 +1,13 @@
+#This is a comment
+find name
+
+#This is the file
+file analysis.txt
+
+#This is the check command
+#check bsub jobs
+
+#username
+username mad_max
+
+#maximum iterations
