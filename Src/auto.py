@@ -46,11 +46,11 @@ class auto(object):
 		
 		fp = open("autoinit", "r+")
 		
-		self.init_data = []
+		self.InitData = []
 		
 		for x in fp:
 			
-			self.init_data.append(str(x))
+			self.InitData.append(str(x))
 		
 		fp.close()
 		
@@ -65,7 +65,7 @@ class auto(object):
 		self.JobFile		= False
 		JobFileFound		= False
 		
-		for x in self.init_data:
+		for x in self.InitData:
 			
 			#If there is a pound symbol within the line
 			#the entire line is considered a comment
@@ -195,7 +195,7 @@ class auto(object):
 			print("Failed to call bsub. Make sure it is installed")
 			 
 		
-	#Prints every line to the terminal
+	#Prints every line within the lines variable to the terminal
 	def print_lines(self):
 		
 		for x in self.lines:
