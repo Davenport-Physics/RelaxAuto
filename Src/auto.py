@@ -39,13 +39,120 @@ class auto(object):
 		
 		self.read_init_file()
 		self.determine_init_attributes()
+		self.call_grep()
+					
+					
+	def read_init_file(self):
+		
+		fp = open("autoinit", "r+")
+		
+		self.init_data = []
+		
+		for x in fp:
+			
+			self.init_data.append(str(x))
+		
+		fp.close()
+		
+	def determine_init_attributes(self):
+		
+		self.GrepAttribute	= False 
+		GrepAttributeFound	= False
+		
+		self.FileAttribute	= False
+		FileAttributeFound	= False
+		
+		self.JobFile		= False
+		JobFileFound		= False
+		
+		for x in self.init_data:
+			
+			#If there is a pound symbol within the line
+			#the entire line is considered a comment
+			#Later on I might change this, but for the moment
+			#this suffices.
+			if '#' in x:
+				
+				continue
+				
+			elif 'find' in x:
+				
+				#This portion of the code determines the grep command
+				#it is not complex and makes the assumption that between
+				#find and your command is a space.
+				if GrepAttributeFound == False:
+					
+					GrepAttributeFound = True
+					self.GrepAttribute = get_attribute_substring(len('file') , x)
+					
+				else:
+					
+					print("Error, too many find strings")
+			
+			#Makes the same assumptions as find.		
+			elif 'file' in x:
+				
+				if FileAttributeFound == False:
+					
+					FileAttributeFound	= True
+					self.FileAttribute	= get_attribute_substring(len('file') , x)
+					
+				else:
+					
+					print("Error, too many file strings")
+				
+			elif 'check' in x:
+				
+				print("check not implemented")
+				
+			elif 'username' in x:
+				
+				print("Username not implemented")
+				
+			elif 'jobfile' in x:
+				
+				if JobFileFound == False:
+					
+					JobFileFound	= True
+					self.JobFile	= get_attribute_substring(len('jobfile') , x)
+					
+				else:
+					
+					print("Too many Job attributes")
+					
+					
+	#checks to make that specific attributes are within the autoinit
+	#file. If not, the program ceases execute, after informing the user
+	#of what data is missing.			
+	def check_attributes(self):
+		
+		QuitProgram = False
+		
+		if self.FileAttribute == False:
+			
+			print("Missing file attribute")
+			QuitProgram = True
+			
+		if self.GrepAttribute == False:
+			
+			print("Missing grep attribute")
+			QuitProgram = True
+			
+		if QuitProgram == True:
+			
+			print("Please add these attributes to autoinit before runtime")
+			quit(1)
+				
+		
+	def call_grep(self):
 		
 		#shell=True is a security risk, when the shell commands are
 		#determined at runtime. This needs to be changed to
 		#popen to eliminate this security hole.
 		
 		try:
-			command	= "grep " + str(self.grep_attribute) + " " + str(self.file_attribute)
+			
+			command	= "grep " + str(self.GrepAttribute) + " " + str(self.FileAttribute)
 			hold	= str(sp.check_output(command, shell=True))
 		
 		except:
@@ -64,92 +171,30 @@ class auto(object):
 				
 					self.lines.append(hold[temp:x])
 					temp = x + 2
-					
-					
-	def read_init_file(self):
 		
-		fp = open("autoinit", "r+")
+	def make_bsub_job(self):
 		
-		self.init_data = []
-		
-		for x in fp:
+		try:
 			
-			self.init_data.append(str(x))
-		
-		fp.close()
-		
-	def determine_init_attributes(self):
-		
-		self.grep_attribute		= False 
-		grep_attribute_found	= False
-		
-		self.file_attribute		= False
-		file_attribute_found	= False
-		
-		for x in self.init_data:
+			command	= "bsub<job"
+			hold	= ""
 			
-			#If there is a pound symbol within the line
-			#the entire line is considered a comment
-			#Later on I might change this, but for the moment
-			#this suffices.
-			if '#' in x:
-				
-				continue
-				
-			elif 'find' in x:
-				
-				#This portion of the code determines the grep command
-				#it is not complex and makes the assumption that between
-				#find and your command is a space.
-				if grep_attribute_found == False:
-					
-					grep_attribute_found = True
-					
-					for i in range( 4 , len(x) ):
-						
-						if x[i] == ' ':
-							
-							continue
-						
-						else:
-							
-							self.grep_attribute = x[i:len(x)-1]
-							break
-					
-				else:
-					
-					print("Error, too many find strings")
+		except:
 			
-			#Makes the same assumptions as find.		
-			elif 'file' in x:
-				
-				if file_attribute_found == False:
-					
-					for i in range( 4, len(x) ):
-						
-						if x[i] == ' ':
-							
-							continue
-								
-						else:
-							
-							self.file_attribute = x[i:len(x)-1]
-							break
-				
-				else:
-					
-					print("Error, too many file strings")
-				
-			elif 'check' in x:
-				
-				print("check not implemented")
-				
-			elif "username" in x:
-				
-				print("Username not implemented")
-					
-				
-	
+			print("Failed")
+		
+	def call_bsub_jobs(self):
+		
+		try:
+			
+			command	= "bsub jobs"
+			hold	= str(sp.check_output(command,shell=True))
+			
+		except:
+			
+			print("Failed to call bsub. Make sure it is installed")
+			 
+		
 	#Prints every line to the terminal
 	def print_lines(self):
 		
@@ -158,6 +203,20 @@ class auto(object):
 			print(x)
 		
 
+def get_attribute_substring(StartIndex , x):
+	
+	for i in range(StartIndex, len(x)):
+		
+		if x[i] == ' ':
+			
+			continue
+			
+		else:
+			
+			return x[i:len(x)-1]
+		
+	
+	
 if __name__ == '__main__':
 	main()
 
