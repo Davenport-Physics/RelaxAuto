@@ -39,7 +39,8 @@ class auto(object):
 		
 		self.read_init_file()
 		self.determine_init_attributes()
-		self.call_grep()
+	
+		self.lines = call_grep(self.GrepAttribute,self.Filename)
 					
 					
 	def read_init_file(self):
@@ -59,8 +60,8 @@ class auto(object):
 		self.GrepAttribute	= False 
 		GrepAttributeFound	= False
 		
-		self.FileAttribute	= False
-		FileAttributeFound	= False
+		self.Filename	= False
+		FilenameFound	= False
 		
 		self.JobFile		= False
 		JobFileFound		= False
@@ -92,10 +93,10 @@ class auto(object):
 			#Makes the same assumptions as find.		
 			elif 'file' in x:
 				
-				if FileAttributeFound == False:
+				if FilenameFound == False:
 					
-					FileAttributeFound	= True
-					self.FileAttribute	= get_attribute_substring(len('file') , x)
+					FilenameFound	= True
+					self.Filename	= get_attribute_substring(len('file') , x)
 					
 				else:
 					
@@ -128,9 +129,9 @@ class auto(object):
 		
 		QuitProgram = False
 		
-		if self.FileAttribute == False:
+		if self.Filename == False:
 			
-			print("Missing file attribute")
+			print("Missing filename attribute")
 			QuitProgram = True
 			
 		if self.GrepAttribute == False:
@@ -142,36 +143,7 @@ class auto(object):
 			
 			print("Please add these attributes to autoinit before runtime")
 			quit(1)
-				
-		
-	def call_grep(self):
-		
-		#shell=True is a security risk, when the shell commands are
-		#determined at runtime. This needs to be changed to
-		#popen to eliminate this security hole.
-		
-		try:
-			
-			command	= "grep " + str(self.GrepAttribute) + " " + str(self.FileAttribute)
-			hold	= str(sp.check_output(command, shell=True))
-		
-		except:
-			
-			print("Init file has missing data, please fix it.")
-			exit(1)
-		
-		self.lines = []
-	
-		temp = 0
-		for x in range(len(hold)):
-		
-			if hold[x] == '\\':
-			
-				if hold[x + 1] == 'n':
-				
-					self.lines.append(hold[temp:x])
-					temp = x + 2
-		
+						
 	def make_bsub_job(self):
 		
 		try:
@@ -201,7 +173,36 @@ class auto(object):
 		for x in self.lines:
 			
 			print(x)
+
+def call_grep(GrepAttribute,Filename):
 		
+	#shell=True is a security risk, when the shell commands are
+	#determined at runtime. This needs to be changed to
+	#popen to eliminate this security hole.
+		
+	try:
+			
+		command	= "grep " + str(GrepAttribute) + " " + str(Filename)
+		hold	= str(sp.check_output(command, shell=True))
+		
+	except:
+			
+		print("Init file has missing data, please fix it.")
+		exit(1)
+		
+	lines = []
+	
+	temp = 0
+	for x in range(len(hold)):
+		
+		if hold[x] == '\\':
+		
+			if hold[x + 1] == 'n':
+				
+				lines.append(hold[temp:x])
+				temp = x + 2
+				
+	return lines
 
 def get_attribute_substring(StartIndex , x):
 	
