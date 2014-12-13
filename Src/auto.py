@@ -23,15 +23,7 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  
 
-import subprocess as sp
-
-def main():
-	
-	obj = auto()
-	
-	obj.print_lines()
-	
-	return 0
+from calls import *
 	
 class auto(object):
 	
@@ -60,8 +52,8 @@ class auto(object):
 		self.GrepAttribute	= False 
 		GrepAttributeFound	= False
 		
-		self.Filename	= False
-		FilenameFound	= False
+		self.Filename		= False
+		FilenameFound		= False
 		
 		self.JobFile		= False
 		JobFileFound		= False
@@ -142,30 +134,7 @@ class auto(object):
 		if QuitProgram == True:
 			
 			print("Please add these attributes to autoinit before runtime")
-			quit(1)
-						
-	def make_bsub_job(self):
-		
-		try:
-			
-			command	= "bsub<job"
-			hold	= ""
-			
-		except:
-			
-			print("Failed")
-		
-	def call_bsub_jobs(self):
-		
-		try:
-			
-			command	= "bsub jobs"
-			hold	= str(sp.check_output(command,shell=True))
-			
-		except:
-			
-			print("Failed to call bsub. Make sure it is installed")
-			 
+			quit(1) 
 		
 	#Prints every line within the lines variable to the terminal
 	def print_lines(self):
@@ -174,36 +143,7 @@ class auto(object):
 			
 			print(x)
 
-def call_grep(GrepAttribute,Filename):
 		
-	#shell=True is a security risk, when the shell commands are
-	#determined at runtime. This needs to be changed to
-	#popen to eliminate this security hole.
-		
-	try:
-			
-		command	= "grep " + str(GrepAttribute) + " " + str(Filename)
-		hold	= str(sp.check_output(command, shell=True))
-		
-	except:
-			
-		print("Init file has missing data, please fix it.")
-		exit(1)
-		
-	lines = []
-	
-	temp = 0
-	for x in range(len(hold)):
-		
-		if hold[x] == '\\':
-		
-			if hold[x + 1] == 'n':
-				
-				lines.append(hold[temp:x])
-				temp = x + 2
-				
-	return lines
-
 def get_attribute_substring(StartIndex , x):
 	
 	for i in range(StartIndex, len(x)):
@@ -215,9 +155,4 @@ def get_attribute_substring(StartIndex , x):
 		else:
 			
 			return x[i:len(x)-1]
-		
-	
-	
-if __name__ == '__main__':
-	main()
-
+			
