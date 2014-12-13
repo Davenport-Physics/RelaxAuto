@@ -49,14 +49,20 @@ class auto(object):
 		
 	def determine_init_attributes(self):
 		
-		self.GrepAttribute	= False 
-		GrepAttributeFound	= False
+		self.GrepAttribute		= False 
+		GrepAttributeFound		= False
 		
-		self.Filename		= False
-		FilenameFound		= False
+		self.Filename			= False
+		FilenameFound			= False
 		
-		self.JobFile		= False
-		JobFileFound		= False
+		self.JobFile			= False
+		JobFileFound			= False
+		
+		self.VolumeDifference	= False
+		VolumeDifferenceFound	= False
+		
+		self.MaxIterations		= False
+		self.MaxIterationsFound	= False
 		
 		for x in self.InitData:
 			
@@ -100,7 +106,52 @@ class auto(object):
 				
 			elif 'username' in x:
 				
-				print("Username not implemented")
+				print("Username not implemented\n")
+				
+			elif 'max_iterations' in x:
+				
+				if MaxIterationsFound == False:
+					
+					MaxIterationsFound	= True
+					self.MaxIterations	= get_attribute_substring(len('max_iterations'), x)
+					
+					try:
+						
+						self.MaxIterations = int(self.MaxIterations)
+						
+					except:
+						
+						print("Max Iterations could not be represented as an int." + 
+								"\nMax iterations will default to 10 iterations")
+								
+						self.MaxIterations = 10
+				
+				else:
+					
+					print("Too many max_iterations defined")
+				
+			elif 'volume_difference' in x:
+				
+				if VolumeDifferenceFound == False:
+					
+					VolumeDifferenceFound	= True
+					self.VolumeDifference	= get_attribute_substring(len('volume_difference') , x)
+					
+					try:
+						
+						self.VolumeDifference 	= float(self.VolumeDifference)
+					
+					except:
+						
+						print("Volume difference could not be represeted as float." +
+								"Please re-execute the \nprogram with required changes,otherwise will default to" +
+								" a difference of 0.0\n")
+						
+						self.VolumeDifference	= 0.0
+					
+				else:
+					
+					print("Too many volume difference attributes")
 				
 			elif 'jobfile' in x:
 				
