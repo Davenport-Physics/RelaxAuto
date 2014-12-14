@@ -25,6 +25,8 @@
 
 import subprocess as sp
 
+from strmanipulation import *
+
 def call_grep(GrepAttribute,Filename):
 		
 	#shell=True is a security risk, when the shell commands are
@@ -41,18 +43,8 @@ def call_grep(GrepAttribute,Filename):
 		print("Init file has missing data, please fix it.")
 		exit(1)
 		
-	lines = []
-	
-	temp = 0
-	for x in range(len(hold)):
+	lines = split_by_return(hold)
 		
-		if hold[x] == '\\':
-		
-			if hold[x + 1] == 'n':
-				
-				lines.append(hold[temp:x])
-				temp = x + 2
-				
 	return lines
 	
 def delete_file(filename):

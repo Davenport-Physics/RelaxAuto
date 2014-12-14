@@ -39,6 +39,22 @@ def delete_extra_spaces(string):
 			
 			return string[:(i + 1)]
 			
+def split_by_return(string):
+	
+	lines = []
+	
+	temp = 0
+	for x in range(len(string)):
+		
+		if string[x] == '\\':
+		
+			if string[x + 1] == 'n':
+				
+				lines.append(string[temp:x])
+				temp = x + 2
+	
+	return lines
+			
 def delete_tabs(string):
 	
 	i = 0
@@ -60,7 +76,7 @@ def delete_tabs(string):
 			pass
 			
 	return string
-		
+			
 def get_attribute_substring(StartIndex , x):
 	
 	for i in range(StartIndex, len(x)):

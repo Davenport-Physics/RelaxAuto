@@ -31,9 +31,13 @@ from time import sleep
 def main():
 	
 	obj = Auto()
+	obj.print_lines()
 	
-	#obj.print_lines()
+	return 0
+
+def run_automation(obj):
 	
+	Verbose = obj.get_verbose()
 	for x in range(obj.get_max_iterations()):
 		
 		make_bsub_job()
@@ -49,10 +53,6 @@ def main():
 	
 	print("Automated Relaxation finished")
 	
-	
-	return 0
-
-
 
 if __name__ == '__main__':
 	main()

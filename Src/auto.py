@@ -42,9 +42,16 @@ class Auto(object):
 					
 	def read_init_file(self):
 		
-		fp = open("autoinit", "r+")
+		try:
 		
-		self.InitData = []
+			fp	= open("autoinit", "r")
+		
+		except:
+			
+			print("No autoinit file found. Please be sure to create one")
+			exit(1)
+		
+		self.InitData	= []
 		
 		for x in fp:
 			
@@ -221,7 +228,7 @@ class Auto(object):
 			print("Missing filename attribute")
 			QuitProgram = True
 			
-		if self.GrepAttribute == False:
+		elif self.GrepAttribute == False:
 			
 			print("Missing grep attribute")
 			QuitProgram = True
@@ -235,6 +242,10 @@ class Auto(object):
 	def get_max_iterations(self):
 		
 		return self.MaxIterations
+		
+	def get_verbose(self):
+		
+		return self.Verbose
 		
 	def check_if_job_finished(self):
 		
@@ -252,7 +263,7 @@ class Auto(object):
 		
 		lines = call_grep(self.GrepAttribute,self.Filename)
 		
-		if (lines[0] - lines[len(lines)-1]) > self.VolumeDifference:
+		if abs(lines[0] - lines[len(lines)-1]) > self.VolumeDifference:
 			
 			return False
 			
