@@ -38,7 +38,7 @@ def delete_extra_spaces(string):
 		if string[i] != ' ':
 			
 			return string[:(i + 1)]
-			
+						
 def split_by_return(string):
 	
 	lines = []
@@ -54,6 +54,17 @@ def split_by_return(string):
 				temp = x + 2
 	
 	return lines
+
+#TODO
+#When call_grep is called, the string returned seems to be dependent
+#on the current grep installed. Grep 2.18 requires a function call
+#to split_by_return. Grep 2.16 requires a different function call,
+#split_without_return because there are no literal \n characters found in 2.16
+#
+#I have no idea whether this simple function call will work.
+def split_without_return(string):
+	
+	return string.splitlines()
 			
 def delete_tabs(string):
 	

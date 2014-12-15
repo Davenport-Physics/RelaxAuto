@@ -42,8 +42,21 @@ def call_grep(GrepAttribute,Filename):
 			
 		print("Init file has missing data, please fix it.")
 		exit(1)
+	
+	if len(hold) == 0:
 		
-	lines = split_by_return(hold)
+		print("No data was found. Possible bad grep attribute. Stopping execution")
+		exit(1)	
+		
+	if ('\\' + 'n') in hold:
+		 		
+		lines = split_by_return(hold)
+	
+	else:
+		
+		lines = split_without_return(hold)
+		
+		
 		
 	return lines
 	
