@@ -62,22 +62,36 @@ def call_grep(GrepAttribute,Filename):
 	
 def delete_file(filename):
 	
-	if '-rf' in filename or '*' in filename:
+	check_for_bad_strings(filename)
 		
-		print("Error, -rf or * command found in filename.\nExiting program")
-		exit(1)
-		
-	else:
-		
-		try:
+	try:
 			
-			command	= "rm " + str(filename)
+		command	= "rm " + str(filename)
+		hold	= str(sp.checkout_output(command,shell=True))
+		
+	except:
+			
+		print("Invalid filename most likely")
+		
+			
+def delete_file_which_contains_string(filename):
+	
+	check_for_bad_strings(filename)
+	
+	try:
+		
+		files = get_files_which_contain_string(filename)
+		
+		for name in files:
+			
+			command = "rm " + str(name)
 			hold	= str(sp.checkout_output(command,shell=True))
+			
+	except:
 		
-		except:
-			
-			print("Invalid filename most likely")
-			
+		#TODO
+		print("Error 42")
+				
 
 def make_bsub_job():
 		

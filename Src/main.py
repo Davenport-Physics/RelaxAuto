@@ -38,21 +38,32 @@ def main():
 def run_automation(obj):
 	
 	Verbose = obj.get_verbose()
+	
+	#Filename will hold the string of file/s to be deleted after
+	#each iteration
+	Filename = obj.get_files_to_be_deleted()
+	
 	for x in range(obj.get_max_iterations()):
 		
 		make_bsub_job()
 		
+		#Waits for the job to be finished
 		while obj.check_if_job_finished() != True:
 			
 			sleep(.1)
+		
+		if len(Filename) > 0:
 			
+			delete_file(Filename)	
+			
+		#Once the job is finished, it checks to the minimum volume difference
+		#If the difference has been met, it breaks the for loop.
 		if obj.check_volume_difference() == True:
 			
 			break;
-			
 	
 	print("Automated Relaxation finished")
 	
-
+	
 if __name__ == '__main__':
 	main()

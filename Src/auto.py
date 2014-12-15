@@ -61,26 +61,37 @@ class Auto(object):
 		
 	def determine_init_attributes(self):
 		
+		#Grep
 		self.GrepAttribute		= False 
 		GrepAttributeFound		= False
 		
+		#Filename
 		self.Filename			= False
 		FilenameFound			= False
 		
+		#job file
 		self.JobFile			= False
 		JobFileFound			= False
 		
+		#volume diff
 		self.VolumeDifference	= False
 		VolumeDifferenceFound	= False
 		
+		#Max interations
 		self.MaxIterations		= False
 		MaxIterationsFound		= False
 		
+		#User name
 		self.Username			= False
 		UsernameFound			= False
 		
+		#Program Verbosity
 		self.Verbose			= False
 		VerboseFound			= False
+		
+		#Delete file
+		self.DeleteFile			= False
+		DeleteFileFound			= False
 		
 		for x in self.InitData:
 			
@@ -110,7 +121,8 @@ class Auto(object):
 					
 					print("Error, too many find strings")
 			
-			#Makes the same assumptions as find.		
+			#Makes the same assumptions as find. This is the file that
+			#will be access when calling grep	
 			elif 'file' in x:
 				
 				if FilenameFound == False:
@@ -121,10 +133,18 @@ class Auto(object):
 				else:
 					
 					print("Error, too many file strings")
+			
+			#Sometimes during an iteration, a file must be deleted
+			elif 'delete_file' in x:
 				
-			elif 'check' in x:
-				
-				print("check not implemented")
+				if DeleteFileFound == False:
+					
+					DeleteFileFound = True
+					self.DeleteFile = get_attribute_substring(len('delete_file') , x)
+					
+				else:
+					
+					print("Too many delete_file attributes found")
 				
 			elif 'username' in x:
 				
@@ -160,7 +180,6 @@ class Auto(object):
 					
 					print("Too many max_iterations defined")
 			
-			#TODO volume difference needs a function to call	
 			elif 'volume_difference' in x:
 				
 				if VolumeDifferenceFound == False:
@@ -246,6 +265,10 @@ class Auto(object):
 	def get_verbose(self):
 		
 		return self.Verbose
+		
+	def get_files_to_be_deleted(self):
+		
+		return self.DeleteFile
 		
 	def check_if_job_finished(self):
 		

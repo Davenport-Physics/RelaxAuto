@@ -23,6 +23,8 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   
 
+import os
+
 def get_char_index(character, string):
 	
 	for i in range(len(string)):
@@ -46,12 +48,10 @@ def split_by_return(string):
 	temp = 0
 	for x in range(len(string)):
 		
-		if string[x] == '\\':
+		if string[x] == '\\' and string[x+1] == 'n':
 		
-			if string[x + 1] == 'n':
-				
-				lines.append(string[temp:x])
-				temp = x + 2
+			lines.append(string[temp:x])
+			temp = x + 2
 	
 	return lines
 
@@ -60,8 +60,6 @@ def split_by_return(string):
 #on the current grep installed. Grep 2.18 requires a function call
 #to split_by_return. Grep 2.16 requires a different function call,
 #split_without_return because there are no literal \n characters found in 2.16
-#
-#I have no idea whether this simple function call will work.
 def split_without_return(string):
 	
 	return string.splitlines()
@@ -100,3 +98,15 @@ def get_attribute_substring(StartIndex , x):
 			
 			return x[i:len(x)-1]
 			
+
+def check_for_bad_strings(filename):
+	
+	if '-rf' in filename or '*' in filename:
+		
+		print("Error, -rf or * command found in filename.\nExiting program")
+		exit(1)
+
+#TODO
+def get_files_which_contain_string(filename):
+	
+	print("get_files_which_contain_string not implemented")
