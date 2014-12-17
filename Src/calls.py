@@ -23,7 +23,16 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   
 
-import subprocess as sp
+SubProcessAvailable = True
+
+try:
+
+	import subprocess as sp
+	
+except:
+	
+	SubProcessAvailable = False
+	
 
 from strmanipulation import *
 
@@ -93,6 +102,8 @@ def delete_file_which_contains_string(filename):
 		print("Error 42")
 				
 
+#TODO possibility that the file is not called job, and therefore
+#bsub<job will have no effect
 def make_bsub_job():
 		
 	try:

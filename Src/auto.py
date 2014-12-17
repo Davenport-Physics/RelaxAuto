@@ -107,133 +107,126 @@ class Auto(object):
 					i = get_char_index('#',x)
 					x = str(delete_extra_spaces(x[:i]))
 				
-			if 'find' in x:
+			if 'find' in x and GrepAttributeFound == False:
 				
-				#This portion of the code determines the grep command
-				#it is not complex and makes the assumption that between
-				#find and your command is a space.
-				if GrepAttributeFound == False:
-					
-					GrepAttributeFound = True
-					self.GrepAttribute = get_attribute_substring(len('file') , x)
-					
-				else:
-					
-					print("Error, too many find strings")
+				GrepAttributeFound = file_attribute(x)
 			
 			#Makes the same assumptions as find. This is the file that
 			#will be access when calling grep	
-			elif 'file' in x:
+			elif 'file' in x and FileFound == False:
 				
-				if FilenameFound == False:
-					
-					FilenameFound	= True
-					self.Filename	= get_attribute_substring(len('file') , x)
-					
-				else:
-					
-					print("Error, too many file strings")
+				FileFound = file_attribute(x)
 			
 			#Sometimes during an iteration, a file must be deleted
-			elif 'delete_file' in x:
+			elif 'delete_file' in x and DeleteFileFound == False:
 				
-				if DeleteFileFound == False:
-					
-					DeleteFileFound = True
-					self.DeleteFile = get_attribute_substring(len('delete_file') , x)
-					
-				else:
-					
-					print("Too many delete_file attributes found")
-				
-			elif 'username' in x:
-				
-				if UsernameFound == False:
-					
-					UsernameFound = True
-					self.Username = get_attribute_substring(len('username'), x)
-					
-				else:
-					
-					print("Too many usernames found")
-				
-				
-			elif 'max_iterations' in x:
-				
-				if MaxIterationsFound == False:
-					
-					MaxIterationsFound	= True
-					self.MaxIterations	= get_attribute_substring(len('max_iterations'), x)
-					
-					try:
-						
-						self.MaxIterations = int(self.MaxIterations)
-						
-					except:
-						
-						print("Max Iterations could not be represented as an int." + 
-								"\nMax iterations will default to 10 iterations")
-								
-						self.MaxIterations = 10
-				
-				else:
-					
-					print("Too many max_iterations defined")
+				DeleteFileFound = self.delete_file_attribute(x)
 			
-			elif 'volume_difference' in x:
 				
-				if VolumeDifferenceFound == False:
-					
-					VolumeDifferenceFound	= True
-					self.VolumeDifference	= get_attribute_substring(len('volume_difference') , x)
-					
-					try:
-						
-						self.VolumeDifference 	= float(self.VolumeDifference)
-					
-					except:
-						
-						print("Volume difference could not be represeted as float." +
-								"Please re-execute the \nprogram with required changes,otherwise will default to" +
-								" a difference of 0.0\n")
-						
-						self.VolumeDifference	= 0.0
-					
-				else:
-					
-					print("Too many volume difference attributes")
+			elif 'username' in x and UsernameFound == False:
+				
+				UsernameFound = self.username_attribute(x)
+				
+				
+			elif 'max_iterations' in x and MaxIterationsFound == False:
+				
+				MaxIterationsFound = self.max_iterations_attribute(x)
+			
+			
+			elif 'volume_difference' in x and VolumeDifferenceFound == False:
+				
+				VolumeDifferenceFound = self.volume_difference_attribute(x)
+			
 			
 			#TODO jobfile needs to be implemented
-			elif 'jobfile' in x:
+			elif 'jobfile' in x and JobFileFound == False:
 				
-				if JobFileFound == False:
-					
-					JobFileFound	= True
-					self.JobFile	= get_attribute_substring(len('jobfile') , x)
-					
-				else:
-					
-					print("Too many Job attributes")
+				JobFileFound = self.jobfile_attribute(x)
+			
 			
 			#TODO Needs to be implemented throughout the code		
-			elif 'verbose' in x:
+			elif 'verbose' in x and VerboseFound == False:
 				
-				if VerboseFound == False:
-					
-					VerboseFound 		= True
-					
-					try:
+				VerboseFound = self.verbose_attribute(x)
+	
+	def find_attribute(self , x):
+		
+		self.GrepAttribute = get_attribute_substring(len('file') , x)
+		
+		return True
+	
+	def file_attribute(self , x):
+		
+		self.Filename = get_attribute_substring(len('file') , x)
+		
+		return True
+	
+	def delete_file_attribute(self , x):
+		
+		self.DeleteFile = get_attribute_substring(len('delete_file') , x)
+		
+		return True
+	
+	def username_attribute(self , x):
+		
+		self.Username = get_attribute_substring( len('username') , x )
+		
+		return True
+	
+	def max_iterations_attribute(self , x):
+		
+		self.MaxIterations = get_attribute_substring(len('max_iterations') , x)
+		
+		try:
 						
-						self.Verbose	= bool(get_attribute_substring(len('verbose') , x))
+			self.MaxIterations = int(self.MaxIterations)
 						
-					except:
+		except:
 						
-						print("Please be sure to capitalize the first letter in True or False")
+			print("Max Iterations could not be represented as an int." + 
+					"\nMax iterations will default to 10 iterations")
+								
+			self.MaxIterations = 10
+			
+		return True
+	
+	def volume_difference_attribute(self , x):
+		
+		self.VolumeDifference	= get_attribute_substring(len('volume_difference') , x)
 					
-				else:
+		try:
+						
+			self.VolumeDifference 	= float(self.VolumeDifference)
+			
+		except:
+						
+			print("Volume difference could not be represeted as float." +
+					"Please re-execute the \nprogram with required changes,otherwise will default to" +
+					" a difference of 0.0\n")
+			
+			self.VolumeDifference = 0.0
+			
+		return True
+	
+	def jobfile_attribute(self , x):
+	
+		self.JobFile = get_attribute_substring(len('jobfile') , x)
+		
+		return True
+	
+	def verbose_attribute(self , x):
 					
-					print("Too many verbose attributes found")
-					
+		try:
+						
+			self.Verbose = bool(get_attribute_substring(len('verbose') , x))
+			
+			return True
+						
+		except:
+						
+			print("Please be sure to capitalize the first letter in True or False")
+			
+			return False
 					
 	#checks to make that specific attributes are within the autoinit
 	#file. If not, the program ceases execute, after informing the user

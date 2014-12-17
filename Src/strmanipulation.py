@@ -25,6 +25,7 @@
 
 import os
 
+#returns the first index of a character found within the string.
 def get_char_index(character, string):
 	
 	for i in range(len(string)):
@@ -33,6 +34,8 @@ def get_char_index(character, string):
 			
 			return i
 
+
+#Deletes extra spaces at the end of a string, and returns a substring
 def delete_extra_spaces(string):
 	
 	for i in range(len(string)-1 ,0 , -1):
@@ -40,7 +43,9 @@ def delete_extra_spaces(string):
 		if string[i] != ' ':
 			
 			return string[:(i + 1)]
-						
+
+#Returns a list of strings, that are split up by literal \n found within
+#the passed string.						
 def split_by_return(string):
 	
 	lines = []
@@ -55,7 +60,6 @@ def split_by_return(string):
 	
 	return lines
 
-#TODO
 #When call_grep is called, the string returned seems to be dependent
 #on the current grep installed. Grep 2.18 requires a function call
 #to split_by_return. Grep 2.16 requires a different function call,
@@ -63,7 +67,8 @@ def split_by_return(string):
 def split_without_return(string):
 	
 	return string.splitlines()
-			
+
+#Deletes any literal tabs \n found within the string and returns a substring			
 def delete_tabs(string):
 	
 	i = 0
@@ -85,7 +90,10 @@ def delete_tabs(string):
 			pass
 			
 	return string
-			
+
+#returns the attribute following the start index. It removes any
+#spaces between the start index and the beginning of the first non-space
+#character found within x.	
 def get_attribute_substring(StartIndex , x):
 	
 	for i in range(StartIndex, len(x)):
@@ -99,6 +107,8 @@ def get_attribute_substring(StartIndex , x):
 			return x[i:len(x)-1]
 			
 
+#Checks to see if there are any illegal commands found within the filename
+#that can cause the deletion of a large set of data at once.
 def check_for_bad_strings(filename):
 	
 	if '-rf' in filename or '*' in filename:
