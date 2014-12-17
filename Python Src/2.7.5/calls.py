@@ -23,15 +23,7 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   
 
-SubProcessAvailable = True
-
-try:
-
-	import subprocess as sp
-	
-except:
-	
-	SubProcessAvailable = False
+import subprocess as sp
 	
 
 from strmanipulation import *
