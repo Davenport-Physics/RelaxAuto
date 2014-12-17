@@ -34,6 +34,7 @@ def get_char_index(character, string):
 			
 			return i
 
+	return False
 
 #Deletes extra spaces at the end of a string, and returns a substring
 def delete_extra_spaces(string):

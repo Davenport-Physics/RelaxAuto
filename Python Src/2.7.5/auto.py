@@ -25,7 +25,35 @@
 
 from calls import *
 from strmanipulation import *
-	
+
+#	class Auto
+#
+#	During initialization, several function are called to help divide
+#	the work load.
+#
+#	read_init_file, looks for a file called autoinit. It reads every line
+#	found within autoinit and places that data into self.InitData which
+#	is a list of strings
+#
+#	determine_init_attributes goes through every line of self.InitData
+# 	and looks for a variety of strings within each line, and if one is found
+#	it then initializes a corresponding variable.
+#
+#
+#	attributes
+#
+#	'#' is the probably the most common attribute, and it is the comment
+#	indentifier. When this is found within a line, further processing on
+#	on that line is done and a new substring is returned without '#' or any
+#	data to the right of that.
+#
+#	'find' tells the program which command to use it when calling grep. Or rather
+#	which string of data grep should look for within a file
+#
+#	'file' tells the program which file to access while grep is being called
+#
+#	
+#	
 class Auto(object):
 	
 	def __init__(self):
@@ -279,7 +307,15 @@ class Auto(object):
 		
 		lines = call_grep(self.GrepAttribute,self.Filename)
 		
-		if abs(lines[0] - lines[len(lines)-1]) > self.VolumeDifference:
+		#lines[0] has no useful data at the moment
+		
+		index			= get_char_index(':',line[1])
+		FirstVolume		= float(get_attribute_substring(index,line[1]))
+		
+		index			= get_char_index(':', line[len(line)-1])
+		SecondVolume	= float(get_attribute_substring(index,line[len(line)-1]))
+		
+		if abs(FirstVolume - SecondVolume) > self.VolumeDifference:
 			
 			return False
 			

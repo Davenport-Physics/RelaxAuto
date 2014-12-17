@@ -66,7 +66,6 @@ def call_grep(GrepAttribute,Filename):
 		lines = split_without_return(hold)
 		
 		
-		
 	return lines
 	
 def delete_file(filename):
@@ -121,7 +120,7 @@ def call_bsub_jobs():
 		
 	try:
 			
-		command	= "bsub jobs"
+		command	= "bjobs"
 		hold	= make_call(command)
 			
 	except:

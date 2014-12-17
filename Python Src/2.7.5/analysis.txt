@@ -240,3 +240,21 @@ Index by function name
   [14] calculate_force        [21] engine_run              [8] velocity_accelerationTime
   [10] calculate_velocity      [9] force_kqqR2
    [1] check_system           [18] get_float
+
+  volume/ion in A,a.u.               =      11.13        75.08
+  volume of cell :       44.50
+  volume of cell :       44.50
+  volume of cell :       42.28
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       43.43
+  volume of cell :       44.50
+

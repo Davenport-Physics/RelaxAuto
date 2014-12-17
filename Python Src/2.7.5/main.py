@@ -52,15 +52,25 @@ def run_automation(obj):
 			
 			sleep(.1)
 		
-		if len(Filename) > 0:
+		try:
 			
-			delete_file(Filename)	
+			if len(Filename) > 0:
 			
-		#Once the job is finished, it checks to the minimum volume difference
+				delete_file(Filename)
+				
+		except:
+			
+			pass	
+			
+		#Once the job is finished, it checks the minimum volume difference
 		#If the difference has been met, it breaks the for loop.
 		if obj.check_volume_difference() == True:
 			
 			break;
+			
+		print("Iteration %d complete" % (x))
+	
+	
 	
 	print("Automated Relaxation finished")
 	
