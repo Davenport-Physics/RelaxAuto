@@ -23,26 +23,34 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   
 
-import subprocess as sp
+SubProcessFound = True
+
+try:
+
+	import subprocess as sp
+	
+except:
+	
+	SubProcessFound = False
+	import os
 	
 
 from strmanipulation import *
 
 def call_grep(GrepAttribute,Filename):
-		
-	#shell=True is a security risk, when the shell commands are
-	#determined at runtime. This needs to be changed to
-	#popen to eliminate this security hole.
+	
 		
 	try:
 			
 		command	= "grep " + str(GrepAttribute) + " " + str(Filename)
-		hold	= str(sp.check_output(command, shell=True))
+		hold    = make_call(command)
 		
 	except:
 			
 		print("Init file has missing data, please fix it.")
 		exit(1)
+	
+	
 	
 	if len(hold) == 0:
 		
@@ -68,7 +76,7 @@ def delete_file(filename):
 	try:
 			
 		command	= "rm " + str(filename)
-		hold	= str(sp.checkout_output(command,shell=True))
+		hold	= make_call(command)
 		
 	except:
 			
@@ -86,7 +94,7 @@ def delete_file_which_contains_string(filename):
 		for name in files:
 			
 			command = "rm " + str(name)
-			hold	= str(sp.checkout_output(command,shell=True))
+			hold	= make_call(command)
 			
 	except:
 		
@@ -101,7 +109,7 @@ def make_bsub_job():
 	try:
 			
 		command	= "bsub<job"
-		hold	= str(sp.check_output(command,shell=True))
+		hold	= make_call(command)
 			
 	except:
 			
@@ -114,11 +122,41 @@ def call_bsub_jobs():
 	try:
 			
 		command	= "bsub jobs"
-		hold	= str(sp.check_output(command,shell=True))
+		hold	= make_call(command)
 			
 	except:
 			
 		print("Failed to call bsub. Make sure it is installed")
 		
+	return hold
+
+
+def make_call(command):
+	
+	global SubProcessFound
+	
+	hold = ""
+	
+	if SubProcessFound:
+		
+		hold = make_subprocess_call(command)
+		
+	else:
+		
+		hold = make_popen_call(command)
+		
+	return hold
+
+def make_subprocess_call(command):
+	
+	return str(sp.check_output(command,shell=True))
+
+def make_popen_call(command):
+	
+	process = os.popen(command)
+	hold	= str(process.read())
+	
+	process.close()
+	
 	return hold
 
