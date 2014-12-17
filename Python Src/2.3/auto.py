@@ -109,13 +109,13 @@ class Auto(object):
 				
 			if 'find' in x and GrepAttributeFound == False:
 				
-				GrepAttributeFound = file_attribute(x)
+				GrepAttributeFound = self.grep_attribute(x)
 			
 			#Makes the same assumptions as find. This is the file that
 			#will be access when calling grep	
-			elif 'file' in x and FileFound == False:
+			elif 'file' in x and FilenameFound == False:
 				
-				FileFound = file_attribute(x)
+				FilenameFound = self.file_attribute(x)
 			
 			#Sometimes during an iteration, a file must be deleted
 			elif 'delete_file' in x and DeleteFileFound == False:
@@ -149,7 +149,7 @@ class Auto(object):
 				
 				VerboseFound = self.verbose_attribute(x)
 	
-	def find_attribute(self , x):
+	def grep_attribute(self , x):
 		
 		self.GrepAttribute = get_attribute_substring(len('file') , x)
 		
