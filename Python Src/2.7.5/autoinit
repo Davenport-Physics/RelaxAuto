@@ -18,3 +18,6 @@ volume_difference .5
 
 #whether the program will print out data as it automates
 verbose True
+
+#delete file after each iteration
+delete_file testvasp

@@ -51,17 +51,25 @@ def run_automation(obj):
 		make_bsub_job()
 		
 		#Waits for the job to be finished
-		while obj.check_if_job_finished() != True:
+		while obj.check_if_job_finished() == False:
 			
-			sleep(.1)
+			if Verbose == True:
+				
+				print("Still waiting on job to finish")
+			
+			sleep(1)
+			
+		if Verbose == True:
+			
+			print("Job is finished")
 		
 		if obj.get_delete_type() == 1:
 			
-			delete_file(filename)
+			delete_file(Filename)
 			
 		elif obj.get_delete_type() == 2:
 			
-			delete_file_which_contains_string(filename)
+			delete_file_which_contains_string(Filename)
 			
 		
 			

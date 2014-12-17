@@ -380,6 +380,10 @@ class Auto(object):
 				
 				MinVolume = TempMin
 			
+		if self.Verbose == True:
+			
+			print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume,MinVolume))	
+			
 		return [MaxVolume,MinVolume]
 			
 		
