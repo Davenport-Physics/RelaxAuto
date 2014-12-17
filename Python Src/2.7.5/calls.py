@@ -125,7 +125,7 @@ def call_bsub_jobs():
 			
 	except:
 			
-		print("Failed to call bsub. Make sure it is installed")
+		print("Failed to call bjobs. Make sure it is installed")
 		
 	return hold
 

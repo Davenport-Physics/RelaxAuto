@@ -121,6 +121,10 @@ class Auto(object):
 		self.DeleteFile			= False
 		DeleteFileFound			= False
 		
+		#Deletes a file that contains a portion of this string
+		self.DeleteFileContains	= False
+		DeleteFileContainsFound	= False
+		
 		for x in self.InitData:
 			
 			#You can now have comments anywhere
@@ -150,7 +154,12 @@ class Auto(object):
 				
 				DeleteFileFound = self.delete_file_attribute(x)
 			
+			
+			elif 'delete_file_which_contains' in x and DeleteFileContainsFound == False:
 				
+				DeleteFileContains = self.delete_file_contains_attribute(x)
+			
+			
 			elif 'username' in x and UsernameFound == False:
 				
 				UsernameFound = self.username_attribute(x)
@@ -192,6 +201,12 @@ class Auto(object):
 	def delete_file_attribute(self , x):
 		
 		self.DeleteFile = get_attribute_substring(len('delete_file') , x)
+		
+		return True
+		
+	def delete_file_contains_attribute(self , x):
+		
+		self.DeleteFileContains = get_attribute_substring(len('delete_file_contains') , x)
 		
 		return True
 	
@@ -289,7 +304,36 @@ class Auto(object):
 		
 	def get_files_to_be_deleted(self):
 		
-		return self.DeleteFile
+		try:
+			if len(self.DeleteFile) > 0:
+				return self.DeleteFile
+		except:
+			pass
+			
+		try:
+			if len(self.DeleteFileContains) > 0:
+				return self.DeleteFileContains
+		except:
+			pass
+		
+		return False
+		
+	# 1 - literal delete, 2 - delete file that contains string, -1 no deletion
+	def get_delete_type(self):
+		
+		try:
+			if len(self.DeleteFile) > 0:
+				return 1
+		except:
+			pass
+			
+		try:
+			if len(self.DeleteFileContains) > 0:
+				return 2
+		except:
+			pass
+			
+		return -1
 		
 	def check_if_job_finished(self):
 		
@@ -309,19 +353,35 @@ class Auto(object):
 		
 		#lines[0] has no useful data at the moment
 		
-		index			= get_char_index(':',line[1])
-		FirstVolume		= float(get_attribute_substring(index,line[1]))
+		volumes = self.find_min_max_volume(lines)
 		
-		index			= get_char_index(':', line[len(line)-1])
-		SecondVolume	= float(get_attribute_substring(index,line[len(line)-1]))
-		
-		if abs(FirstVolume - SecondVolume) > self.VolumeDifference:
+		if abs(volumes[0] - volumes[1]) > self.VolumeDifference:
 			
 			return False
 			
 		else:
 			
 			return True
+			
+	def find_min_max_volume(self,lines):
+		
+		MaxVolume = MinVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1, lines[1]))
+		
+		for x in range(2 , len(lines)):
+			
+			index	= get_char_index(':' , lines[x]) + 1
+			TempMax	= TempMin = float(get_attribute_substring(index,lines[x]))
+			
+			if TempMax > MaxVolume:
+				
+				MaxVolume = temp
+			
+			if TempMin < MinVolume:
+				
+				MinVolume = TempMin
+			
+		return [MaxVolume,MinVolume]
+			
 		
 	#Prints every line within the lines variable to the terminal
 	def print_lines(self):

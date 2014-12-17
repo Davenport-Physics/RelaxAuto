@@ -31,7 +31,10 @@ from time import sleep
 def main():
 	
 	obj = Auto()
-	obj.print_lines()
+	#obj.print_lines()
+	#print(obj.check_volume_difference())
+	
+	run_automation(obj)
 	
 	return 0
 
@@ -52,15 +55,15 @@ def run_automation(obj):
 			
 			sleep(.1)
 		
-		try:
+		if obj.get_delete_type() == 1:
 			
-			if len(Filename) > 0:
+			delete_file(filename)
 			
-				delete_file(Filename)
-				
-		except:
+		elif obj.get_delete_type() == 2:
 			
-			pass	
+			delete_file_which_contains_string(filename)
+			
+		
 			
 		#Once the job is finished, it checks the minimum volume difference
 		#If the difference has been met, it breaks the for loop.
