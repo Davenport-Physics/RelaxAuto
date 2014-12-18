@@ -100,7 +100,10 @@ def delete_file_which_contains_string(filename):
 	except:
 		
 		#TODO
-		print("Error 42")
+		print("Couldn't delete file")
+		return False
+		
+	return True
 				
 
 #TODO possibility that the file is not called job, and therefore

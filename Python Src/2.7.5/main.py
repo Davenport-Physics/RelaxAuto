@@ -31,12 +31,10 @@ from time import sleep
 def main():
 	
 	obj = Auto()
-	#obj.print_lines()
-	#print(obj.check_volume_difference())
 	
 	run_automation(obj)
 	
-	return 0
+	return 0		
 
 def run_automation(obj):
 	
@@ -54,17 +52,15 @@ def run_automation(obj):
 				
 			print("Created Job, waiting to finish.")
 		
+		interval = 0
 		#Waits for the job to be finished
 		while obj.check_if_job_finished() == False:
 			
-			interval = 0
-			
-			sleep(5)
-			if Verbose == True and interval % 10 == 0:
+			sleep(10)
+			interval += 10
+			if Verbose == True and interval % 20 == 0:
 				
 				print("%d seconds have passed" % (interval))
-				
-			interval += 5
 				
 			
 		if Verbose == True:
@@ -77,13 +73,15 @@ def run_automation(obj):
 			
 		elif obj.get_delete_type() == 2:
 			
-			delete_file_which_contains_string(Filename)
+			if delete_file_which_contains_string(Filename) == True and Verbose == True:
+				
+				print("Successfully delted files which contained the string %s" % (Filename))
 			
 		
 			
 		#Once the job is finished, it checks the minimum volume difference
 		#If the difference has been met, it breaks the for loop.
-		if check_volume_difference(obj.get_grep_attribute(),obj.get_filename(),obj.get_volume_difference()) == True:
+		if check_volume_difference(obj) == True:
 			
 			break;
 			

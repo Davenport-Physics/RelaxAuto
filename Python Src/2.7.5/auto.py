@@ -150,7 +150,7 @@ class Auto(object):
 				FilenameFound = self.file_attribute(x)
 			
 			#Sometimes during an iteration, a file must be deleted
-			elif 'delete_file' in x and DeleteFileFound == False:
+			elif 'delete_file_strict' in x and DeleteFileFound == False:
 				
 				DeleteFileFound = self.delete_file_attribute(x)
 			
@@ -342,13 +342,13 @@ class Auto(object):
 	def get_delete_type(self):
 		
 		try:
-			if len(self.DeleteFile) > 0:
+			if type(self.DeleteFile) is str:
 				return 1
 		except:
 			pass
 			
 		try:
-			if len(self.DeleteFileContains) > 0:
+			if type(self.DeleteFileContains) is str:
 				return 2
 		except:
 			pass
@@ -367,15 +367,19 @@ class Auto(object):
 		return True
 	
 		
-def check_volume_difference(GrepAttribute,Filename,VolumeDifference):
+def check_volume_difference(obj):
 		
-	lines = call_grep(GrepAttribute,Filename)
+	lines = call_grep(obj.get_grep_attribute(),obj.get_filename())
 		
 	#lines[0] has no useful data at the moment
 		
-	volumes = find_min_max_volume(lines)
+	volume = find_min_max_volume(lines,obj.get_verbose())
 		
-	if abs(volumes[0] - volumes[1]) > VolumeDifference:
+	if abs(volume[0] - volume[1]) > obj.get_volume_difference():
+		
+		if obj.get_verbose() == True:
+			
+			print("Volume difference found to be %f" % (abs(volume[0] - volume[1])))
 			
 		return False
 			
@@ -384,7 +388,7 @@ def check_volume_difference(GrepAttribute,Filename,VolumeDifference):
 		return True
 	
 			
-def find_min_max_volume(lines):
+def find_min_max_volume(lines,Verbose):
 		
 	MaxVolume = MinVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1, lines[1]))
 		
@@ -401,7 +405,7 @@ def find_min_max_volume(lines):
 				
 			MinVolume = TempMin
 			
-	if self.Verbose == True:
+	if Verbose == True:
 			
 		print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume,MinVolume))	
 			
