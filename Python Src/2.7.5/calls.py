@@ -122,11 +122,11 @@ def call_bsub_jobs():
 			
 		command	= "bjobs"
 		hold	= make_call(command)
-			
+		
 	except:
 			
 		print("Failed to call bjobs. Make sure it is installed")
-		
+	
 	return hold
 
 

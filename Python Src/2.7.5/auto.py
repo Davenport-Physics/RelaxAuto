@@ -206,7 +206,7 @@ class Auto(object):
 		
 	def delete_file_contains_attribute(self , x):
 		
-		self.DeleteFileContains = get_attribute_substring(len('delete_file_contains') , x)
+		self.DeleteFileContains = get_attribute_substring(len('delete_file_which_contains') , x)
 		
 		return True
 	
@@ -339,13 +339,11 @@ class Auto(object):
 		
 		lines = call_bsub_jobs()
 		
-		for x in lines:
+		if self.Username in lines:
 			
-			if self.Username in x:
-				
-				return True
+			return False
 		
-		return False
+		return True
 		
 	def check_volume_difference(self):
 		

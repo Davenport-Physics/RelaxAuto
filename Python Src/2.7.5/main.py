@@ -50,14 +50,14 @@ def run_automation(obj):
 		
 		make_bsub_job()
 		
+		if Verbose == True:
+				
+			print("Created Job, waiting to finish.")
+		
 		#Waits for the job to be finished
 		while obj.check_if_job_finished() == False:
 			
-			if Verbose == True:
-				
-				print("Still waiting on job to finish")
-			
-			sleep(1)
+			sleep(2)
 			
 		if Verbose == True:
 			
@@ -79,7 +79,7 @@ def run_automation(obj):
 			
 			break;
 			
-		print("Iteration %d complete" % (x))
+		print("Iteration %d complete" % (x+1))
 	
 	
 	
