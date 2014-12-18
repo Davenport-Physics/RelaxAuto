@@ -57,7 +57,15 @@ def run_automation(obj):
 		#Waits for the job to be finished
 		while obj.check_if_job_finished() == False:
 			
-			sleep(2)
+			interval = 0
+			
+			sleep(5)
+			if Verbose == True and interval % 10 == 0:
+				
+				print("%d seconds have passed" % (interval))
+				
+			interval += 5
+				
 			
 		if Verbose == True:
 			
@@ -75,16 +83,21 @@ def run_automation(obj):
 			
 		#Once the job is finished, it checks the minimum volume difference
 		#If the difference has been met, it breaks the for loop.
-		if obj.check_volume_difference() == True:
+		if check_volume_difference(obj.get_grep_attribute(),obj.get_filename(),obj.get_volume_difference()) == True:
 			
 			break;
 			
-		print("Iteration %d complete" % (x+1))
+		print("Iteration %d complete" % (x + 1))
 	
 	
 	
 	print("Automated Relaxation finished")
 	
+def print_lines(lines):
+	
+	for x in lines:
+		
+		print(x)
 	
 if __name__ == '__main__':
 	main()

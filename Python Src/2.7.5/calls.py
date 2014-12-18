@@ -37,6 +37,7 @@ except:
 
 from strmanipulation import *
 
+
 def call_grep(GrepAttribute,Filename):
 	
 		
@@ -67,6 +68,7 @@ def call_grep(GrepAttribute,Filename):
 		
 		
 	return lines
+	
 	
 def delete_file(filename):
 	
@@ -116,6 +118,7 @@ def make_bsub_job():
 		
 	return hold
 		
+		
 def call_bsub_jobs():
 		
 	try:
@@ -130,6 +133,7 @@ def call_bsub_jobs():
 	return hold
 
 
+#Never call this function or the functions below it directly.
 def make_call(command):
 	
 	global SubProcessFound
@@ -146,9 +150,11 @@ def make_call(command):
 		
 	return hold
 
+
 def make_subprocess_call(command):
 	
 	return str(sp.check_output(command,shell=True))
+
 
 def make_popen_call(command):
 	

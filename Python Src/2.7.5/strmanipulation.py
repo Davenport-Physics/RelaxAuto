@@ -36,6 +36,7 @@ def get_char_index(character, string):
 
 	return False
 
+
 #Deletes extra spaces at the end of a string, and returns a substring
 def delete_extra_spaces(string):
 	
@@ -44,6 +45,7 @@ def delete_extra_spaces(string):
 		if string[i] != ' ':
 			
 			return string[:(i + 1)]
+
 
 #Returns a list of strings, that are split up by literal \n found within
 #the passed string.						
@@ -61,6 +63,7 @@ def split_by_return(string):
 	
 	return lines
 
+
 #When call_grep is called, the string returned seems to be dependent
 #on the current grep installed. Grep 2.18 requires a function call
 #to split_by_return. Grep 2.16 requires a different function call,
@@ -68,6 +71,7 @@ def split_by_return(string):
 def split_without_return(string):
 	
 	return string.splitlines()
+
 
 #Deletes any literal tabs \n found within the string and returns a substring			
 def delete_tabs(string):
@@ -91,6 +95,7 @@ def delete_tabs(string):
 			pass
 			
 	return string
+
 
 #returns the attribute following the start index. It removes any
 #spaces between the start index and the beginning of the first non-space
@@ -117,7 +122,17 @@ def check_for_bad_strings(filename):
 		print("Error, -rf or * command found in filename.\nExiting program")
 		exit(1)
 
-#TODO
+#gets any files that contain the filename string in them.
 def get_files_which_contain_string(filename):
 	
-	print("get_files_which_contain_string not implemented")
+	files = []
+	
+	hold = os.listdir()
+	
+	for x in hold:
+		
+		if filename in x:
+			
+			files.append(x)
+			
+	return files

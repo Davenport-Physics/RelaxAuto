@@ -186,11 +186,13 @@ class Auto(object):
 				
 				VerboseFound = self.verbose_attribute(x)
 	
+	
 	def grep_attribute(self , x):
 		
 		self.GrepAttribute = get_attribute_substring(len('file') , x)
 		
 		return True
+	
 	
 	def file_attribute(self , x):
 		
@@ -198,11 +200,13 @@ class Auto(object):
 		
 		return True
 	
+	
 	def delete_file_attribute(self , x):
 		
 		self.DeleteFile = get_attribute_substring(len('delete_file') , x)
 		
 		return True
+	
 		
 	def delete_file_contains_attribute(self , x):
 		
@@ -210,11 +214,13 @@ class Auto(object):
 		
 		return True
 	
+	
 	def username_attribute(self , x):
 		
 		self.Username = get_attribute_substring( len('username') , x )
 		
 		return True
+	
 	
 	def max_iterations_attribute(self , x):
 		
@@ -232,6 +238,7 @@ class Auto(object):
 			self.MaxIterations = 10
 			
 		return True
+	
 	
 	def volume_difference_attribute(self , x):
 		
@@ -251,11 +258,13 @@ class Auto(object):
 			
 		return True
 	
+	
 	def jobfile_attribute(self , x):
 	
 		self.JobFile = get_attribute_substring(len('jobfile') , x)
 		
 		return True
+	
 	
 	def verbose_attribute(self , x):
 					
@@ -270,37 +279,48 @@ class Auto(object):
 			print("Please be sure to capitalize the first letter in True or False")
 			
 			return False
+	
 					
 	#checks to make that specific attributes are within the autoinit
 	#file. If not, the program ceases execute, after informing the user
 	#of what data is missing.			
 	def check_attributes(self):
 		
-		QuitProgram = False
-		
 		if self.Filename == False:
 			
 			print("Missing filename attribute")
-			QuitProgram = True
+			exit(1)
 			
 		elif self.GrepAttribute == False:
 			
 			print("Missing grep attribute")
-			QuitProgram = True
-			
-		if QuitProgram == True:
-			
-			print("Please add these attributes to autoinit before runtime")
-			quit(1)
+			exit(1)
 			
 	
 	def get_max_iterations(self):
 		
 		return self.MaxIterations
+	
 		
 	def get_verbose(self):
 		
 		return self.Verbose
+	
+	
+	def get_grep_attribute(self):
+		
+		return self.GrepAttribute
+		
+		
+	def get_filename(self):
+		
+		return self.Filename
+		
+		
+	def get_volume_difference(self):
+		
+		return self.VolumeDifference
+		
 		
 	def get_files_to_be_deleted(self):
 		
@@ -334,6 +354,7 @@ class Auto(object):
 			pass
 			
 		return -1
+	
 		
 	def check_if_job_finished(self):
 		
@@ -344,57 +365,46 @@ class Auto(object):
 			return False
 		
 		return True
+	
 		
-	def check_volume_difference(self):
+def check_volume_difference(GrepAttribute,Filename,VolumeDifference):
 		
-		lines = call_grep(self.GrepAttribute,self.Filename)
+	lines = call_grep(GrepAttribute,Filename)
 		
-		#lines[0] has no useful data at the moment
+	#lines[0] has no useful data at the moment
 		
-		volumes = self.find_min_max_volume(lines)
+	volumes = find_min_max_volume(lines)
 		
-		if abs(volumes[0] - volumes[1]) > self.VolumeDifference:
+	if abs(volumes[0] - volumes[1]) > VolumeDifference:
 			
-			return False
+		return False
 			
-		else:
+	else:
 			
-			return True
+		return True
+	
 			
-	def find_min_max_volume(self,lines):
+def find_min_max_volume(lines):
 		
-		MaxVolume = MinVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1, lines[1]))
+	MaxVolume = MinVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1, lines[1]))
 		
-		for x in range(2 , len(lines)):
+	for x in range(2 , len(lines)):
 			
-			index	= get_char_index(':' , lines[x]) + 1
-			TempMax	= TempMin = float(get_attribute_substring(index,lines[x]))
+		index	= get_char_index(':' , lines[x]) + 1
+		TempMax	= TempMin = float(get_attribute_substring(index,lines[x]))
 			
-			if TempMax > MaxVolume:
+		if TempMax > MaxVolume:
 				
-				MaxVolume = temp
+			MaxVolume = temp
 			
-			if TempMin < MinVolume:
+		if TempMin < MinVolume:
 				
-				MinVolume = TempMin
+			MinVolume = TempMin
 			
-		if self.Verbose == True:
+	if self.Verbose == True:
 			
-			print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume,MinVolume))	
+		print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume,MinVolume))	
 			
-		return [MaxVolume,MinVolume]
-			
+	return [MaxVolume,MinVolume]
 		
-	#Prints every line within the lines variable to the terminal
-	def print_lines(self):
 		
-		try:
-			
-			for x in self.lines:
-			
-				print(x)
-				
-		except:
-			
-			print("Grep was probably never called")
-

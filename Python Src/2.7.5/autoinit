@@ -20,4 +20,4 @@ volume_difference .5
 verbose True
 
 #delete file after each iteration
-delete_file testvasp
+delete_file_which_contains testvasp
