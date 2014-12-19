@@ -45,13 +45,13 @@ def test_list_files():
 
 def run_automation(obj):
 	
-	Verbose = obj.get_verbose()
+	Verbose = obj.get_attribute_by_name("verbose")
 	
 	#Filename will hold the string of file/s to be deleted after
 	#each iteration
 	Filename = obj.get_files_to_be_deleted()
 	
-	for x in range(obj.get_max_iterations()):
+	for x in range(obj.get_attribute_by_name("max_iterations")):
 		
 		make_bsub_job()
 		
@@ -104,18 +104,18 @@ def run_automation(obj):
 #executes a command line program.	
 def check_for_errors(obj):
 	
-	CheckError = obj.get_error()
+	CheckError = obj.get_attribute_by_name("error")
 	if type(CheckError) is str:
 			
-		File 		= obj.get_error_file()
+		File 		= obj.get_attribute_by_name("error_file")
 		NewestFile	= determine_most_recent_file(get_files_which_contain_string(File))
 		hold 		= call_grep(CheckError , NewestFile)
 		
 		for x in hold:
 			
-			if obj.check_error(x) == True:
+			if obj.check_for_error(x) == True:
 				
-				make_call_with_string(obj.get_error_call())
+				make_call_with_string(obj.get_attribute_by_name("do_when_error"))
 				
 				return True
 				

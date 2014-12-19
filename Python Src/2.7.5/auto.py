@@ -62,6 +62,7 @@ class Auto(object):
 		self.init_attribute_objects()
 		self.determine_init_attributes()
 		self.check_attributes()			
+		
 					
 	def read_init_file(self):
 		
@@ -81,6 +82,7 @@ class Auto(object):
 			self.InitData.append(str(x))
 		
 		fp.close()
+	
 		
 	def init_attribute_objects(self):
 		
@@ -97,15 +99,15 @@ class Auto(object):
 		#User name
 		self.Username			= Attribute("username","string")
 		#Program Verbosity
-		self.Verbose			= Attribute("verbose","string")
+		self.Verbose			= Attribute("verbose","boolean")
 		#Delete file
 		self.DeleteFile			= Attribute("delete_file_strict","string")
 		#Deletes a file that contains a portion of this string
 		self.DeleteFileContains	= Attribute("delete_file_which_contains","string")
 		#check_for_error
-		self.ErrorFile			= Attribute("check_for_error","string")
+		self.ErrorFile			= Attribute("error_file","string")
 		#when_error
-		self.WhenError			= Attribute("when_error","string")
+		self.DoWhenError		= Attribute("do_when_error","string")
 		#error
 		self.ErrorString		= Attribute("error","string")
 		
@@ -121,12 +123,11 @@ class Auto(object):
 		self.objlist.append(self.DeleteFile)
 		self.objlist.append(self.DeleteFileContains)
 		self.objlist.append(self.ErrorFile)
-		self.objlist.append(self.WhenError)
+		self.objlist.append(self.DoWhenError)
 		self.objlist.append(self.ErrorString)
 		
 		
 	def determine_init_attributes(self):
-		
 		
 		for x in self.InitData:
 			
@@ -142,24 +143,39 @@ class Auto(object):
 					i = get_char_index('#' , x)
 					x = str(delete_extra_spaces(x[:i]))
 				
-			for i in range( len( objlist ) ):
+			for i in range( len( self.objlist ) ):
 				
-				if objlist[i].get_name() in x and objlist[i].get_boolean() == False:
+				if self.objlist[i].get_name() in x and self.objlist[i].get_boolean() == False:
 					
-					if 'string' in objlist[i].get_attribute_type(): 
+					
+					if 'string' in self.objlist[i].get_attribute_type(): 
 						
-						objlist[i].set_attribute(get_attribute_substring(objlist[i].get_name() , x))
-						objlist[i].set_boolean(True)
+						self.objlist[i].set_attribute(len(get_attribute_substring(self.objlist[i].get_name())) , x))
+						self.objlist[i].set_boolean(True)
 						
-					elif 'float' in objlist[i].get_attribute_type():
 						
-						if 'volume_difference' in objlist[i].get_name():
+					elif 'float' in self.objlist[i].get_attribute_type():
+						
+						
+						if 'volume_difference' in self.objlist[i].get_name():
 							
-							volume_difference_attribute()
+							self.volume_difference_attribute(x)
 						
-					elif 'int' in objlist[i].get_attribute_type():
 						
-						print("float")
+					elif 'int' in self.objlist[i].get_attribute_type():
+						
+						
+						if 'max_iterations' in self.objlist[i].get_name():
+							
+							self.max_iterations_attribute(x)
+							
+							
+					elif 'boolean' in self.objlist[i].get_attribute_type():
+						
+						
+						if 'verbose' in self.objlist[i].get_name():
+							
+							self.verbose_attribute(x)
 					
 	
 	#checks to make that specific attributes are within the autoinit
@@ -186,12 +202,7 @@ class Auto(object):
 			self.ErrorString.set_boolean(False)
 			self.WhenError.set_boolean(False)
 			
-	
-	def get_string_attribute(self , name , x):
-		
-		return get_attribute_substring( len( name ) , x)
-	
-	
+			
 	def max_iterations_attribute(self , x):
 		
 		Max = get_attribute_substring(len(self.MaxIterations.get_name()) , x)
@@ -228,11 +239,12 @@ class Auto(object):
 			
 		return True
 	
+	
 	def verbose_attribute(self , x):
 					
 		try:
 						
-			self.Verbose = bool(get_attribute_substring(len('verbose') , x))
+			self.Verbose = bool(get_attribute_substring( len('verbose') , x) )
 			
 			return True
 						
@@ -242,32 +254,20 @@ class Auto(object):
 			
 			return False
 	
+	
+	def get_attribute_by_name(self , name):
+		
+		for x in range( len( self.objlist ) ):
+			
+			if name in self.objlist[i]:
+				
+				return self.objlist[i].get_attribute()
+				
+		if self.Verbose.get_attribute() == True:
+			
+			print("Did not find corresponding attribute with name %s" % (name))
 						
-	def get_max_iterations(self):
-		
-		return self.MaxIterations.get_attribute()
-	
-		
-	def get_verbose(self):
-		
-		return self.Verbose.get_attribute()
-	
-	
-	def get_grep_attribute(self):
-		
-		return self.GrepAttribute.get_attribute()
-		
-		
-	def get_filename(self):
-		
-		return self.Filename.get_attribute()
-		
-		
-	def get_volume_difference(self):
-		
-		return self.VolumeDifference.get_attribute()
-		
-		
+							
 	def get_files_to_be_deleted(self):
 		
 		if type(self.DeleteFile.get_attribute()) is str:
@@ -281,38 +281,29 @@ class Auto(object):
 
 		return False
 		
+		
 	# 1 - literal delete, 2 - delete file that contains string, -1 no deletion
 	def get_delete_type(self):
 		
-		if type(self.DeleteFile) is str:
+		if type(self.DeleteFile.get_attribute()) is str:
 			
 			return 1
 			
-		if type(self.DeleteFileContains) is str:
+		if type(self.DeleteFileContains.get_attribute()) is str:
 			
 			return 2
 			
 		return -1
-		
-	def get_error(self):
-		
-		return self.ErrorString.get_attribute()
-
-	def get_error_file(self):
-		
-		return self.ErrorFile.get_attribute()
-		
-	def get_error_call(self):
-		
-		return self.WhenError.get_attribute()
 	
-	def check_error(self , x):
+		
+	def check_for_error(self , x):
 		
 		if self.ErrorString.get_attribute() in x:
 			
 			return True
 			
 		return False
+	
 		
 	def check_if_job_finished(self):
 		
@@ -323,6 +314,7 @@ class Auto(object):
 			return False
 		
 		return True
+	
 		
 class Attribute:
 	
@@ -332,52 +324,58 @@ class Attribute:
 		self.AttributeType		= AttributeType
 		self.AttributeString	= False
 		self.boolean			= False	
+	
 			
 	def set_attribute(self,attribute):
 		
 		self.AttributeString = attribute
 	
+	
 	def set_boolean(self,boolean):
 		
 		self.boolean = boolean
+	
 		
 	def get_name(self):
 		
 		return self.name
+	
 		
 	def get_attribute(self):
 		
 		return self.AttributeString
+	
 			
 	def get_boolean(self):
 		
 		return self.boolean
 		
+	
 	def get_attribute_type(self):
 		
 		return self.AttributeType
+
 		
 def check_volume_difference(obj):
 		
-	lines = call_grep(obj.get_grep_attribute(),obj.get_filename())
+	lines = call_grep(obj.get_attribute_by_name("find"),obj.get_attribute_by_name("file"))
 		
-	#lines[0] has no useful data at the moment
-		
-	volume = find_first_last_volume(lines , obj.get_verbose())
+	volume = find_first_last_volume(lines , obj.get_attribute_by_name("verbose"))
 	
-	if obj.get_verbose() == True:
+	if obj.get_attribute_by_name("verbose") == True:
 		
 		print("Volume 1 = %f, Volume 2 = %f" % (volume[0],volume[1]))	
 		print("Volume difference found to be %f" % (abs(volume[0] - volume[1])))
 			
 		
-	if abs(volume[0] - volume[1]) > obj.get_volume_difference():
+	if abs(volume[0] - volume[1]) > obj.get_attribute_by_name("volume_difference"):
 		
 		return False
 			
 	else:
 			
 		return True
+
 	
 def find_first_last_volume(lines , Verbose):
 	
@@ -385,6 +383,7 @@ def find_first_last_volume(lines , Verbose):
 	LastVolume	= float(get_attribute_substring(get_char_index(':',lines[len(lines)-1])+1,lines[len(lines)-1]))
 	
 	return [FirstVolume,LastVolume]
+
 			
 def find_min_max_volume(lines,Verbose):
 		
@@ -397,7 +396,7 @@ def find_min_max_volume(lines,Verbose):
 			
 		if TempMax > MaxVolume:
 				
-			MaxVolume = tempMax
+			MaxVolume = TempMax
 			
 		if TempMin < MinVolume:
 				
