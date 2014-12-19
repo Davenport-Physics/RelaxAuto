@@ -59,6 +59,7 @@ class Auto(object):
 	def __init__(self):
 		
 		self.read_init_file()
+		self.init_attribute_objects()
 		self.determine_init_attributes()
 		self.check_attributes()			
 					
@@ -81,55 +82,51 @@ class Auto(object):
 		
 		fp.close()
 		
-	def determine_init_attributes(self):
+	def init_attribute_objects(self):
 		
 		#Grep
-		self.GrepAttribute		= False 
-		GrepAttributeFound		= False
-		
+		self.GrepAttribute		= Attribute("find","string")
 		#Filename
-		self.Filename			= False
-		FilenameFound			= False
-		
+		self.Filename			= Attribute("file","string")
 		#job file
-		self.JobFile			= False
-		JobFileFound			= False
-		
+		self.JobFile			= Attribute("jobfile","string")
 		#volume diff
-		self.VolumeDifference	= False
-		VolumeDifferenceFound	= False
-		
+		self.VolumeDifference	= Attribute("volume_difference","float")
 		#Max interations
-		self.MaxIterations		= False
-		MaxIterationsFound		= False
-		
+		self.MaxIterations		= Attribute("max_iterations","int")
 		#User name
-		self.Username			= False
-		UsernameFound			= False
-		
+		self.Username			= Attribute("username","string")
 		#Program Verbosity
-		self.Verbose			= False
-		VerboseFound			= False
-		
+		self.Verbose			= Attribute("verbose","string")
 		#Delete file
-		self.DeleteFile			= False
-		DeleteFileFound			= False
-		
+		self.DeleteFile			= Attribute("delete_file_strict","string")
 		#Deletes a file that contains a portion of this string
-		self.DeleteFileContains	= False
-		DeleteFileContainsFound	= False
-		
+		self.DeleteFileContains	= Attribute("delete_file_which_contains","string")
 		#check_for_error
-		self.ErrorFile			= False
-		ErrorFileFound			= False
-		
+		self.ErrorFile			= Attribute("check_for_error","string")
 		#when_error
-		self.WhenError			= False
-		WhenErrorFound			= False
-		
+		self.WhenError			= Attribute("when_error","string")
 		#error
-		self.ErrorString		= False
-		ErrorStringFound		= False
+		self.ErrorString		= Attribute("error","string")
+		
+		
+		self.objlist = []
+		self.objlist.append(self.GrepAttribute)
+		self.objlist.append(self.Filename)
+		self.objlist.append(self.JobFile)
+		self.objlist.append(self.VolumeDifference)
+		self.objlist.append(self.MaxIterations)
+		self.objlist.append(self.Username)
+		self.objlist.append(self.Verbose)
+		self.objlist.append(self.DeleteFile)
+		self.objlist.append(self.DeleteFileContains)
+		self.objlist.append(self.ErrorFile)
+		self.objlist.append(self.WhenError)
+		self.objlist.append(self.ErrorString)
+		
+		
+	def determine_init_attributes(self):
+		
 		
 		for x in self.InitData:
 			
@@ -142,82 +139,40 @@ class Auto(object):
 					
 				else:
 				
-					i = get_char_index('#',x)
+					i = get_char_index('#' , x)
 					x = str(delete_extra_spaces(x[:i]))
 				
-			if 'find' in x and GrepAttributeFound == False:
+			for i in range( len( objlist ) ):
 				
-				GrepAttributeFound = self.grep_attribute(x)
-			
-			#Makes the same assumptions as find. This is the file that
-			#will be access when calling grep	
-			elif 'file' in x and FilenameFound == False:
-				
-				FilenameFound = self.file_attribute(x)
-			
-			#Sometimes during an iteration, a file must be deleted
-			elif 'delete_file_strict' in x and DeleteFileFound == False:
-				
-				DeleteFileFound = self.delete_file_attribute(x)
-			
-			
-			elif 'delete_file_which_contains' in x and DeleteFileContainsFound == False:
-				
-				DeleteFileContains = self.delete_file_contains_attribute(x)
-			
-			
-			elif 'username' in x and UsernameFound == False:
-				
-				UsernameFound = self.username_attribute(x)
-				
-				
-			elif 'max_iterations' in x and MaxIterationsFound == False:
-				
-				MaxIterationsFound = self.max_iterations_attribute(x)
-			
-			
-			elif 'volume_difference' in x and VolumeDifferenceFound == False:
-				
-				VolumeDifferenceFound = self.volume_difference_attribute(x)
-				
-				
-			elif 'check_for_error' in x and ErrorFileFound == False:
-				
-				ErrorFileFound = self.check_for_error_attribute(x)
-				
-				
-			elif 'when_error' in x and WhenErrorFound == False:
-				
-				WhenErrorFound = self.when_error_attribute(x)
-				
-				
-			elif 'error' in x and ErrorStringFound == False:
-				
-				ErrorStringFound = self.error_string_attribute(x)
-			
-			#TODO jobfile needs to be implemented
-			elif 'jobfile' in x and JobFileFound == False:
-				
-				JobFileFound = self.jobfile_attribute(x)
-			
-			
-			#TODO Needs to be implemented throughout the code		
-			elif 'verbose' in x and VerboseFound == False:
-				
-				VerboseFound = self.verbose_attribute(x)
-	
+				if objlist[i].get_name() in x and objlist[i].get_boolean() == False:
+					
+					if 'string' in objlist[i].get_attribute_type(): 
+						
+						objlist[i].set_attribute(get_attribute_substring(objlist[i].get_name() , x))
+						objlist[i].set_boolean(True)
+						
+					elif 'float' in objlist[i].get_attribute_type():
+						
+						if 'volume_difference' in objlist[i].get_name():
+							
+							volume_difference_attribute()
+						
+					elif 'int' in objlist[i].get_attribute_type():
+						
+						print("float")
+					
 	
 	#checks to make that specific attributes are within the autoinit
 	#file. If not, the program ceases execute, after informing the user
 	#of what data is missing.			
 	def check_attributes(self):
 		
-		if self.Filename == False:
+		if self.Filename.get_boolean() == False:
 			
 			print("Missing filename attribute")
 			exit(1)
 			
-		elif self.GrepAttribute == False:
+		elif self.GrepAttribute.get_boolean() == False:
 			
 			print("Missing grep attribute")
 			exit(1)
@@ -225,90 +180,43 @@ class Auto(object):
 		#When one is found to be a boolean type, then this command will not
 		#function properly and therefore to prevent it from running. Therefore
 		#all three variables are then set to False
-		if type(self.ErrorFile) is bool or type(self.ErrorString) is bool or type(self.WhenError) is bool:
+		if type(self.ErrorFile.get_attribute()) is bool or type(self.ErrorString.get_attribute()) is bool or type(self.WhenError.get_attribute()) is bool:
 			
-			self.ErrorFile		= False
-			self.ErrorString	= False
-			self.WhenError		= False
-	
-	def when_error_attribute(self , x):
-		
-		self.WhenError = get_attribute_substring(len('when_error') , x)
+			self.ErrorFile.set_boolean(False)
+			self.ErrorString.set_boolean(False)
+			self.WhenError.set_boolean(False)
 			
-		return True
 	
-	def error_string_attribute(self , x):
+	def get_string_attribute(self , name , x):
 		
-		self.ErrorString = get_attribute_substring(len('error') , x)
-		
-		return True
-	
-	def check_for_error_attribute(self , x):
-		
-		self.ErrorFile = get_attribute_substring(len('check_for_error') , x)
-		
-		return True
-	
-	def grep_attribute(self , x):
-		
-		self.GrepAttribute = get_attribute_substring(len('find') , x)
-		
-		return True
-	
-	
-	def file_attribute(self , x):
-		
-		self.Filename = get_attribute_substring(len('file') , x)
-		
-		return True
-	
-	
-	def delete_file_attribute(self , x):
-		
-		self.DeleteFile = get_attribute_substring(len('delete_file') , x)
-		
-		return True
-	
-		
-	def delete_file_contains_attribute(self , x):
-		
-		self.DeleteFileContains = get_attribute_substring(len('delete_file_which_contains') , x)
-		
-		return True
-	
-	
-	def username_attribute(self , x):
-		
-		self.Username = get_attribute_substring( len('username') , x )
-		
-		return True
+		return get_attribute_substring( len( name ) , x)
 	
 	
 	def max_iterations_attribute(self , x):
 		
-		self.MaxIterations = get_attribute_substring(len('max_iterations') , x)
+		Max = get_attribute_substring(len(self.MaxIterations.get_name()) , x)
 		
 		try:
 						
-			self.MaxIterations = int(self.MaxIterations)
+			self.MaxIterations.set_attribute( int( Max ) )
 						
 		except:
 						
 			print("Max Iterations could not be represented as an int." + 
 					"\nMax iterations will default to 10 iterations")
 								
-			self.MaxIterations = 10
+			self.MaxIterations.set_attribute(10)
 			
 		return True
 	
 	
 	def volume_difference_attribute(self , x):
 		
-		self.VolumeDifference	= get_attribute_substring(len('volume_difference') , x)
+		Difference = get_attribute_substring(len(self.VolumeDifference.get_name()) , x)
 					
 		try:
 						
-			self.VolumeDifference 	= float(self.VolumeDifference)
+			self.VolumeDifference.set_attribute( float( Difference ) )
 			
 		except:
 						
@@ -316,17 +224,9 @@ class Auto(object):
 					"Please re-execute the \nprogram with required changes,otherwise will default to" +
 					" a difference of 0.0\n")
 			
-			self.VolumeDifference = 0.0
+			self.VolumeDifference.set_attribute(0.0)
 			
 		return True
-	
-	
-	def jobfile_attribute(self , x):
-	
-		self.JobFile = get_attribute_substring(len('jobfile') , x)
-		
-		return True
-	
 	
 	def verbose_attribute(self , x):
 					
@@ -345,71 +245,70 @@ class Auto(object):
 						
 	def get_max_iterations(self):
 		
-		return self.MaxIterations
+		return self.MaxIterations.get_attribute()
 	
 		
 	def get_verbose(self):
 		
-		return self.Verbose
+		return self.Verbose.get_attribute()
 	
 	
 	def get_grep_attribute(self):
 		
-		return self.GrepAttribute
+		return self.GrepAttribute.get_attribute()
 		
 		
 	def get_filename(self):
 		
-		return self.Filename
+		return self.Filename.get_attribute()
 		
 		
 	def get_volume_difference(self):
 		
-		return self.VolumeDifference
+		return self.VolumeDifference.get_attribute()
 		
 		
 	def get_files_to_be_deleted(self):
 		
-		try:
-			if len(self.DeleteFile) > 0:
-				return self.DeleteFile
-		except:
-			pass
-			
-		try:
-			if len(self.DeleteFileContains) > 0:
-				return self.DeleteFileContains
-		except:
-			pass
+		if type(self.DeleteFile.get_attribute()) is str:
 		
+			return self.DeleteFile.get_attribute()
+			
+			
+		if type(self.DeleteFileContains.get_attribute()) is str:
+			
+			return self.DeleteFileContains.get_attribute()
+
 		return False
 		
 	# 1 - literal delete, 2 - delete file that contains string, -1 no deletion
 	def get_delete_type(self):
 		
 		if type(self.DeleteFile) is str:
+			
 			return 1
 			
 		if type(self.DeleteFileContains) is str:
+			
 			return 2
 			
 		return -1
 		
 	def get_error(self):
 		
-		return self.ErrorString
+		return self.ErrorString.get_attribute()
 
 	def get_error_file(self):
 		
-		return self.ErrorFile
+		return self.ErrorFile.get_attribute()
 		
 	def get_error_call(self):
 		
-		return self.WhenError
+		return self.WhenError.get_attribute()
 	
 	def check_error(self , x):
 		
-		if self.ErrorString in x:
+		if self.ErrorString.get_attribute() in x:
 			
 			return True
 			
@@ -419,7 +318,7 @@ class Auto(object):
 		
 		lines = call_bsub_jobs()
 		
-		if self.Username in lines:
+		if self.Username.get_attribute() in lines:
 			
 			return False
 		
@@ -427,10 +326,36 @@ class Auto(object):
 		
 class Attribute:
 	
-	def __init__(self,name):
+	def __init__(self,name,AttributeType):
 		
-		print(1)
+		self.name				= name
+		self.AttributeType		= AttributeType
+		self.AttributeString	= False
+		self.boolean			= False	
+			
+	def set_attribute(self,attribute):
+		
+		self.AttributeString = attribute
 	
+	def set_boolean(self,boolean):
+		
+		self.boolean = boolean
+		
+	def get_name(self):
+		
+		return self.name
+		
+	def get_attribute(self):
+		
+		return self.AttributeString
+			
+	def get_boolean(self):
+		
+		return self.boolean
+		
+	def get_attribute_type(self):
+		
+		return self.AttributeType
 		
 def check_volume_difference(obj):
 		
