@@ -52,11 +52,15 @@ def call_grep(GrepAttribute,Filename):
 		exit(1)
 	
 	
-	
-	if len(hold) == 0:
+	try:
 		
-		print("No data was found. Possible bad grep attribute. Stopping execution")
-		exit(1)	
+		if len(hold) == 0:
+		
+			print("No data was found. Possible bad grep attribute")
+	
+	except:
+		
+		return ""
 		
 	if ('\\' + 'n') in hold:
 		 		
@@ -135,8 +139,15 @@ def call_bsub_jobs():
 	
 	return hold
 
+def make_call_with_string(command):
+	
+	check_for_bad_strings(command)
+	
+	hold = make_call(command)
+	
+	return hold
 
-#Never call this function or the functions below it directly.
+#You should never call this function or the functions below it directly.
 def make_call(command):
 	
 	global SubProcessFound

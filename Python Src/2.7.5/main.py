@@ -36,6 +36,13 @@ def main():
 	
 	return 0		
 
+
+def test_list_files():
+	
+	files = get_files_which_contain_string('testvasp')
+	
+	print(files)
+
 def run_automation(obj):
 	
 	Verbose = obj.get_verbose()
@@ -66,6 +73,8 @@ def run_automation(obj):
 		if Verbose == True:
 			
 			print("Job is finished")
+					
+		HadErrors = check_for_errors(obj)		
 		
 		if obj.get_delete_type() == 1:
 			
@@ -75,13 +84,13 @@ def run_automation(obj):
 			
 			if delete_file_which_contains_string(Filename) == True and Verbose == True:
 				
-				print("Successfully delted files which contained the string %s" % (Filename))
+				print("Successfully deleted files which contained the string %s" % (Filename))
 			
 		
 			
 		#Once the job is finished, it checks the minimum volume difference
 		#If the difference has been met, it breaks the for loop.
-		if check_volume_difference(obj) == True:
+		if check_volume_difference(obj) == True and HadErrors == False:
 			
 			break;
 			
@@ -90,6 +99,27 @@ def run_automation(obj):
 	
 	
 	print("Automated Relaxation finished")
+
+#Checks to see if there are any errors. If there are, the program
+#executes a command line program.	
+def check_for_errors(obj):
+	
+	CheckError = obj.get_error()
+	if type(CheckError) is str:
+			
+		File 		= obj.get_error_file()
+		NewestFile	= determine_most_recent_file(get_files_which_contain_string(File))
+		hold 		= call_grep(CheckError , NewestFile)
+		
+		for x in hold:
+			
+			if obj.check_error(x) == True:
+				
+				make_call_with_string(obj.get_error_call())
+				
+				return True
+				
+	return False	
 	
 def print_lines(lines):
 	

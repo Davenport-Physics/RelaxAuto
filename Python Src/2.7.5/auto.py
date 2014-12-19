@@ -60,13 +60,7 @@ class Auto(object):
 		
 		self.read_init_file()
 		self.determine_init_attributes()
-	
-		self.lines = call_grep(self.GrepAttribute,self.Filename)
-		
-		for x in range(len(self.lines)):
-			
-			self.lines[x] = delete_tabs(self.lines[x])
-					
+		self.check_attributes()			
 					
 	def read_init_file(self):
 		
@@ -125,6 +119,18 @@ class Auto(object):
 		self.DeleteFileContains	= False
 		DeleteFileContainsFound	= False
 		
+		#check_for_error
+		self.ErrorFile			= False
+		ErrorFileFound			= False
+		
+		#when_error
+		self.WhenError			= False
+		WhenErrorFound			= False
+		
+		#error
+		self.ErrorString		= False
+		ErrorStringFound		= False
+		
 		for x in self.InitData:
 			
 			#You can now have comments anywhere
@@ -173,7 +179,21 @@ class Auto(object):
 			elif 'volume_difference' in x and VolumeDifferenceFound == False:
 				
 				VolumeDifferenceFound = self.volume_difference_attribute(x)
-			
+				
+				
+			elif 'check_for_error' in x and ErrorFileFound == False:
+				
+				ErrorFileFound = self.check_for_error_attribute(x)
+				
+				
+			elif 'when_error' in x and WhenErrorFound == False:
+				
+				WhenErrorFound = self.when_error_attribute(x)
+				
+				
+			elif 'error' in x and ErrorStringFound == False:
+				
+				ErrorStringFound = self.error_string_attribute(x)
 			
 			#TODO jobfile needs to be implemented
 			elif 'jobfile' in x and JobFileFound == False:
@@ -187,9 +207,51 @@ class Auto(object):
 				VerboseFound = self.verbose_attribute(x)
 	
 	
+	#checks to make that specific attributes are within the autoinit
+	#file. If not, the program ceases execute, after informing the user
+	#of what data is missing.			
+	def check_attributes(self):
+		
+		if self.Filename == False:
+			
+			print("Missing filename attribute")
+			exit(1)
+			
+		elif self.GrepAttribute == False:
+			
+			print("Missing grep attribute")
+			exit(1)
+		
+		#When one is found to be a boolean type, then this command will not
+		#function properly and therefore to prevent it from running. Therefore
+		#all three variables are then set to False
+		if type(self.ErrorFile) is bool or type(self.ErrorString) is bool or type(self.WhenError) is bool:
+			
+			self.ErrorFile		= False
+			self.ErrorString	= False
+			self.WhenError		= False
+	
+	def when_error_attribute(self , x):
+		
+		self.WhenError = get_attribute_substring(len('when_error') , x)
+			
+		return True
+	
+	def error_string_attribute(self , x):
+		
+		self.ErrorString = get_attribute_substring(len('error') , x)
+		
+		return True
+	
+	def check_for_error_attribute(self , x):
+		
+		self.ErrorFile = get_attribute_substring(len('check_for_error') , x)
+		
+		return True
+	
 	def grep_attribute(self , x):
 		
-		self.GrepAttribute = get_attribute_substring(len('file') , x)
+		self.GrepAttribute = get_attribute_substring(len('find') , x)
 		
 		return True
 	
@@ -280,23 +342,7 @@ class Auto(object):
 			
 			return False
 	
-					
-	#checks to make that specific attributes are within the autoinit
-	#file. If not, the program ceases execute, after informing the user
-	#of what data is missing.			
-	def check_attributes(self):
-		
-		if self.Filename == False:
-			
-			print("Missing filename attribute")
-			exit(1)
-			
-		elif self.GrepAttribute == False:
-			
-			print("Missing grep attribute")
-			exit(1)
-			
-	
+						
 	def get_max_iterations(self):
 		
 		return self.MaxIterations
@@ -341,20 +387,33 @@ class Auto(object):
 	# 1 - literal delete, 2 - delete file that contains string, -1 no deletion
 	def get_delete_type(self):
 		
-		try:
-			if type(self.DeleteFile) is str:
-				return 1
-		except:
-			pass
+		if type(self.DeleteFile) is str:
+			return 1
 			
-		try:
-			if type(self.DeleteFileContains) is str:
-				return 2
-		except:
-			pass
+		if type(self.DeleteFileContains) is str:
+			return 2
 			
 		return -1
+		
+	def get_error(self):
+		
+		return self.ErrorString
+
+	def get_error_file(self):
+		
+		return self.ErrorFile
+		
+	def get_error_call(self):
+		
+		return self.WhenError
 	
+	def check_error(self , x):
+		
+		if self.ErrorString in x:
+			
+			return True
+			
+		return False
 		
 	def check_if_job_finished(self):
 		
@@ -365,6 +424,12 @@ class Auto(object):
 			return False
 		
 		return True
+		
+class Attribute:
+	
+	def __init__(self,name):
+		
+		print(1)
 	
 		
 def check_volume_difference(obj):
@@ -373,20 +438,28 @@ def check_volume_difference(obj):
 		
 	#lines[0] has no useful data at the moment
 		
-	volume = find_min_max_volume(lines,obj.get_verbose())
+	volume = find_first_last_volume(lines , obj.get_verbose())
+	
+	if obj.get_verbose() == True:
+		
+		print("Volume 1 = %f, Volume 2 = %f" % (volume[0],volume[1]))	
+		print("Volume difference found to be %f" % (abs(volume[0] - volume[1])))
+			
 		
 	if abs(volume[0] - volume[1]) > obj.get_volume_difference():
 		
-		if obj.get_verbose() == True:
-			
-			print("Volume difference found to be %f" % (abs(volume[0] - volume[1])))
-			
 		return False
 			
 	else:
 			
 		return True
 	
+def find_first_last_volume(lines , Verbose):
+	
+	FirstVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1,lines[1]))
+	LastVolume	= float(get_attribute_substring(get_char_index(':',lines[len(lines)-1])+1,lines[len(lines)-1]))
+	
+	return [FirstVolume,LastVolume]
 			
 def find_min_max_volume(lines,Verbose):
 		
@@ -399,7 +472,7 @@ def find_min_max_volume(lines,Verbose):
 			
 		if TempMax > MaxVolume:
 				
-			MaxVolume = temp
+			MaxVolume = tempMax
 			
 		if TempMin < MinVolume:
 				

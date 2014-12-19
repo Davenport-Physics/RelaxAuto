@@ -4,9 +4,6 @@ find volume #this is a comment
 #This is the file
 file analysis.txt
 
-#This is the check command
-#check bsub jobs
-
 #username
 username mad_max
 
@@ -21,3 +18,12 @@ verbose True
 
 #delete file after each iteration
 delete_file_which_contains testvasp
+
+#check file for error. This is non-strict. It will find a file similar that has #a similar name. 
+check_for_error testvasp
+
+#this is the error it needs to check for
+error ZBRENT: fatal internal in brackting
+
+#when there is an error, make this call
+when_error mv CONTCAR POSCAR

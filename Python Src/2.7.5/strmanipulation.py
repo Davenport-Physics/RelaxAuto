@@ -127,7 +127,7 @@ def get_files_which_contain_string(filename):
 	
 	files = []
 	
-	hold = os.listdir()
+	hold = os.listdir('.')
 	
 	for x in hold:
 		
@@ -136,3 +136,27 @@ def get_files_which_contain_string(filename):
 			files.append(x)
 			
 	return files
+	
+def determine_most_recent_file(files):
+	
+	try:
+		
+		return max(files,key = os.path.getctime)
+		
+	except:
+
+		times = []
+		
+		for x in files:
+			
+			times.append(os.path.getctime(x))
+			
+		maxtime = max(times)
+		
+		for x in files:
+			
+			if maxtime == os.path.getctime(x):
+				
+				return x
+				
+		return False
