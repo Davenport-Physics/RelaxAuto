@@ -24,6 +24,7 @@
 #  
 
 from calls import *
+from attributes import *
 from strmanipulation import *
 
 #	class Auto
@@ -93,13 +94,13 @@ class Auto(object):
 		#job file
 		self.JobFile			= Attribute("jobfile","string")
 		#volume diff
-		self.VolumeDifference	= Attribute("volume_difference","float")
+		self.VolumeDifference	= FloatAttribute("volume_difference" , "float" , 0.0)
 		#Max interations
-		self.MaxIterations		= Attribute("max_iterations","int")
+		self.MaxIterations		= IntAttribute("max_iterations" , "int" , 10)
 		#User name
 		self.Username			= Attribute("username","string")
 		#Program Verbosity
-		self.Verbose			= Attribute("verbose","boolean")
+		self.Verbose			= BooleanAttribute("verbose" , "boolean" , True)
 		#Delete file
 		self.DeleteFile			= Attribute("delete_file_strict","string")
 		#Deletes a file that contains a portion of this string
@@ -140,42 +141,14 @@ class Auto(object):
 					
 				else:
 				
-					i = get_char_index('#' , x)
+					i = x.find("#")
 					x = str(delete_extra_spaces(x[:i]))
 				
 			for i in range( len( self.objlist ) ):
 				
 				if self.objlist[i].get_name() in x and self.objlist[i].get_boolean() == False:
 					
-					
-					if 'string' in self.objlist[i].get_attribute_type(): 
-						
-						self.objlist[i].set_attribute(get_attribute_substring(len(self.objlist[i].get_name()) , x))
-						self.objlist[i].set_boolean(True)
-						
-						
-					elif 'float' in self.objlist[i].get_attribute_type():
-						
-						
-						if 'volume_difference' in self.objlist[i].get_name():
-							
-							self.volume_difference_attribute(x)
-						
-						
-					elif 'int' in self.objlist[i].get_attribute_type():
-						
-						
-						if 'max_iterations' in self.objlist[i].get_name():
-							
-							self.max_iterations_attribute(x)
-							
-							
-					elif 'boolean' in self.objlist[i].get_attribute_type():
-						
-						
-						if 'verbose' in self.objlist[i].get_name():
-							
-							self.verbose_attribute(x)
+					self.objlist[i].initialize_attribute(x)
 					
 	
 	#checks to make that specific attributes are within the autoinit
@@ -203,58 +176,6 @@ class Auto(object):
 			self.WhenError.set_boolean(False)
 			
 			
-	def max_iterations_attribute(self , x):
-		
-		Max = get_attribute_substring(len(self.MaxIterations.get_name()) , x)
-		
-		try:
-						
-			self.MaxIterations.set_attribute( int( Max ) )
-						
-		except:
-						
-			print("Max Iterations could not be represented as an int." + 
-					"\nMax iterations will default to 10 iterations")
-								
-			self.MaxIterations.set_attribute(10)
-			
-		return True
-	
-	
-	def volume_difference_attribute(self , x):
-		
-		Difference = get_attribute_substring(len(self.VolumeDifference.get_name()) , x)
-					
-		try:
-						
-			self.VolumeDifference.set_attribute( float( Difference ) )
-			
-		except:
-						
-			print("Volume difference could not be represeted as float." +
-					"Please re-execute the \nprogram with required changes,otherwise will default to" +
-					" a difference of 0.0\n")
-			
-			self.VolumeDifference.set_attribute(0.0)
-			
-		return True
-	
-	
-	def verbose_attribute(self , x):
-					
-		try:
-						
-			self.Verbose.set_attribute(bool(get_attribute_substring( len('verbose') , x)))
-			
-			return True
-						
-		except:
-						
-			print("Please be sure to capitalize the first letter in True or False")
-			
-			return False
-	
-	
 	def get_attribute_by_name(self , name):
 		
 		for i in range( len( self.objlist ) ):
@@ -315,47 +236,7 @@ class Auto(object):
 		
 		return True
 	
-		
-class Attribute:
-	
-	def __init__(self,name,AttributeType):
-		
-		self.name				= name
-		self.AttributeType		= AttributeType
-		self.AttributeString	= False
-		self.boolean			= False	
-	
-			
-	def set_attribute(self,attribute):
-		
-		self.AttributeString = attribute
-	
-	
-	def set_boolean(self,boolean):
-		
-		self.boolean = boolean
-	
-		
-	def get_name(self):
-		
-		return self.name
-	
-		
-	def get_attribute(self):
-		
-		return self.AttributeString
-	
-			
-	def get_boolean(self):
-		
-		return self.boolean
-		
-	
-	def get_attribute_type(self):
-		
-		return self.AttributeType
-
-		
+				
 def check_volume_difference(obj):
 		
 	volume = get_volumes(obj)
@@ -388,19 +269,19 @@ def get_volume_difference(volume):
 	
 def find_first_last_volume(lines , Verbose):
 	
-	FirstVolume = float(get_numerical_substring(get_char_index(':',lines[1])+1,lines[1]))
-	LastVolume	= float(get_numerical_substring(get_char_index(':',lines[-1])+1,lines[-1]))
+	FirstVolume = float(get_numerical_substring(lines[1].find(":")+1,lines[1]))
+	LastVolume	= float(get_numerical_substring(lines[-1].find(":")+1,lines[-1]))
 	
 	return [FirstVolume,LastVolume]
 
 			
 def find_min_max_volume(lines,Verbose):
 		
-	MaxVolume = MinVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1, lines[1]))
+	MaxVolume = MinVolume = float(get_attribute_substring(lines[1].find(":")+1, lines[1]))
 		
 	for x in range(2 , len(lines)):
 			
-		index	= get_char_index(':' , lines[x]) + 1
+		index	= lines[x].find(":") + 1
 		TempMax	= TempMin = float(get_attribute_substring(index,lines[x]))
 			
 		if TempMax > MaxVolume:

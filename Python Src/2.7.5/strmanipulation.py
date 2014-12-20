@@ -25,20 +25,10 @@
 
 import os
 
-#returns the first index of a character found within the string.
-def get_char_index(character, string):
-	
-	if string.find(character) != -1:
-		
-		return string.find(character)
-
-	return False
-
-
 #Deletes extra spaces at the end of a string, and returns a substring
 def delete_extra_spaces(string):
 	
-	for i in range(len(string)-1 ,0 , -1):
+	for i in range(len(string)-1 , 0 , -1):
 		
 		if string[i] != ' ':
 			
@@ -74,25 +64,7 @@ def split_without_return(string):
 #Deletes any literal tabs \n found within the string and returns a substring			
 def delete_tabs(string):
 	
-	i = 0
-	while i < len(string):
-		
-		try:
-			
-			if string[i] == '\\' and string[i+1] == 't':
-			
-				string = string[i+2:len(string)]
-				i = 0
-				
-			else:
-				
-				i += 1
-			
-		except:
-			
-			pass
-			
-	return string
+	return string.replace("\\t" , "")
 
 
 #returns the attribute following the start index. It removes any
