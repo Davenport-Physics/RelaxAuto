@@ -358,7 +358,7 @@ class Attribute:
 		
 def check_volume_difference(obj):
 		
-	volume = get_volumes()
+	volume = get_volumes(obj)
 	
 	if obj.get_attribute_by_name("verbose") == True:
 		
@@ -376,9 +376,10 @@ def check_volume_difference(obj):
 		
 def get_volumes(obj):
 	
-	lines = call_grep(obj.get_attribute_by_name("find"),obj.get_attribute_by_name("file")
+	lines = call_grep(obj.get_attribute_by_name("find"),obj.get_attribute_by_name("file"))
 	
 	return find_first_last_volume(lines , obj.get_attribute_by_name("verbose"))
+	
 	
 def get_volume_difference(volume):
 	
