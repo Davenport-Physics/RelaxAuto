@@ -28,20 +28,82 @@ from calls import *
 
 from time import sleep
 
+"""
+
+The main function doesn't have a lot of code to itself, and the reason
+for this is because I wanted a program that could be applicable in
+different ways, and populating the main function with commands would result
+in some inherent difficulties with applying the script to different applications.
+
+So the main function will normally just initialize an object and call a function.
+
+It's a good function to use if you want to test any of the functions throughout
+the script, to weed out bugs.
+
+Aside that, by default it initializes an auto object, and calls the
+run_automation function, passing a reference (memory address) to the auto object it
+initialized
+
+"""
+
 def main():
 	
 	obj = Auto()
 	
 	run_automation(obj)
 	
-	return 0		
+	return 0
+	
+
+"""
+
+run_automation will begin by determining whether the user wanted
+the program to print out information in a verbose manner, hence the use
+of the Verbose variable. It does this by calling get_attribute_by_name, and
+passing "verbose" to it. get_attribute_by_name will search for an object
+that has that name, and return a attribute of that object.
+
+Then the program initializes an object Filename, which gets a single string
+or a list of files to be deleted. This is dependent on what the
+user provides in the autoinit config file. One object is delete_file_strict
+which tells the program that if it sees a file that is verbatim that string
+it should delete it. There is a list determined by the delete_file_which_contains
+string in the config file, which returns a list of any file that has a portion
+of that string in it's filename
 
 
-def test_list_files():
-	
-	files = get_files_which_contain_string('testvasp')
-	
-	print(files)
+PreviousVolume is a object that is initialized to 0.0. It's used to determine
+whether an "pseudo-error" has happened. I say pseudo-error, because it's
+not an error in the traditional sense, yet it makes the same function
+call as if there was an error. The same action happens. mv CONTCAR POSCAR
+So the error is determined by whether the previous volume and the current
+volume are the same. If they are, then there is a "pseudo-error".
+
+The code then goes into a for loop, which runs a maximum of iterations
+defined by the value in the max_iterations object. By default it's 10, if
+the config file failed to find a max_iterations attribute
+
+the for loop initially makes a function call to make_bsub_job, which
+calls the command line command "bsub<job" which submit's a job to the 
+computer cluster.
+
+In while loop, it checks to see if the job is done. This is determined
+by making a function call to check_if_job_finished, which determines
+whether the queue has a string that is verbatim to the username
+defined in the config file. The function returns false, if it finds that
+the queue still has a string with the user's username.
+
+The program then checks for errors, by making a function call to check_for_errors.
+Afterwards it deletes any files that the user has specified in the config file.
+The program is not required to delete any files.
+
+At the very end, it checks to volume difference and whether the program had
+any errors. In the event that there wasn't any errors, and the volume difference
+is less than or equal to what the user defined in the config file, the
+code will break and the program will halt execution, informing the user
+that the automated relaxation was finished.
+
+"""		
 
 def run_automation(obj):
 	
@@ -107,8 +169,33 @@ def run_automation(obj):
 	
 	print("Automated Relaxation finished")
 
-#Checks to see if there are any errors. If there are, the program
-#executes a command line program.	
+
+"""
+
+check_for_errors begins by determining whether the value returned by
+get_attribute_by_name is a string type. If it is, this is 
+the error the program will be looking for, when it calls grep.
+
+In the event that it is a string type, the function follows by obtaining a
+string of expect file names if "error" is passed to get_attribute_by_name,
+then this function will return a name that will not be verbatim to
+any file. This name is then passed to get_files_which_contain_string,
+which returns a list of files that have the string within their filename.
+
+From there determine_most_recent_file is called, and is passed this list.
+It determines which of the file that's located within the list, is the newest
+, as in has the greatest time stamp value. This is in the event that the user
+decides not provide a delete_file attribute.
+
+Then the function calls call_grep passing CheckError and the NewestFile variables.
+call_grep will return a list of strings.
+
+If the error is located within the list of strings, then the function
+will call make_call_with_string, and will pass the attribute of the do_when_error
+object. By default this is mv CONTCAR POSCAR
+
+
+"""	
 def check_for_errors(obj):
 	
 	CheckError = obj.get_attribute_by_name("error")

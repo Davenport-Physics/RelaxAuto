@@ -25,12 +25,50 @@
 
 from strmanipulation import get_attribute_substring
 
+"""
+
+Initially I didn't want to include more than one class within
+the design of this program. However as it turned out, the code became
+much simpler and more maintainable with the addition of the Attribute
+class and it's subclasses.
+
+An Attribute object is the primary way to store related data that is found
+within the autoinit config file.
+
+You are required to give each Attribute Object a name. This should
+be the name of the attribute identifier in the config file.
+
+The AttributeString variable is the variable that will hold the data
+following the attribute identifier.
+
+Each Attribute object has a boolean variable that is by default set to False.
+It is usually set to True when the AttributeString is initialized to a variable
+other than it's default.
+
+The DefaultAttribute can be passed to each Attribute Object, during
+object initialization. The purpose of this variable is to allow
+the program to continue executing in the event that there is some
+sort of syntax error in the config file. Passing a default value
+is not required.
+
+	SUBCLASSES
+	
+I found that the subclasses further reduced code complexity, in the auto.py
+file. The purpose of each subclass should be obvious, if you review the code.
+
+If you suspect that your AttributeString variable is not going to be a string type
+then you will want to initialize the corresponding object to Int, Float or boolean.
+
+Each of the classes use a similar method of initilization with the only difference,
+being what type AttributeString is.
+
+
+"""
 class Attribute:
 	
-	def __init__(self,name,AttributeType,DefaultAttribute = False):
+	def __init__(self,name,DefaultAttribute = False):
 		
 		self.name				= name
-		self.AttributeType		= AttributeType
 		self.AttributeString	= False
 		self.boolean			= False
 		self.DefaultAttribute	= DefaultAttribute
@@ -75,11 +113,6 @@ class Attribute:
 		
 		return self.boolean
 		
-	
-	def get_attribute_type(self):
-		
-		return self.AttributeType
-		
 		
 class IntAttribute(Attribute):
 	
@@ -87,8 +120,7 @@ class IntAttribute(Attribute):
 		
 		try:
 			
-			temp = int(get_attribute_substring( len(self.name), string))
-			
+			temp = int(get_attribute_substring(len(self.name), string))
 			self.set_attribute(temp)
 			
 		except:

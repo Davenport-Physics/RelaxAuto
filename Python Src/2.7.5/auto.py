@@ -27,34 +27,7 @@ from calls import *
 from attributes import *
 from strmanipulation import *
 
-#	class Auto
-#
-#	During initialization, several function are called to help divide
-#	the work load.
-#
-#	read_init_file, looks for a file called autoinit. It reads every line
-#	found within autoinit and places that data into self.InitData which
-#	is a list of strings
-#
-#	determine_init_attributes goes through every line of self.InitData
-# 	and looks for a variety of strings within each line, and if one is found
-#	it then initializes a corresponding variable.
-#
-#
-#	attributes
-#
-#	'#' is the probably the most common attribute, and it is the comment
-#	indentifier. When this is found within a line, further processing on
-#	on that line is done and a new substring is returned without '#' or any
-#	data to the right of that.
-#
-#	'find' tells the program which command to use it when calling grep. Or rather
-#	which string of data grep should look for within a file
-#
-#	'file' tells the program which file to access while grep is being called
-#
-#	
-#	
+
 class Auto(object):
 	
 	def __init__(self):
@@ -88,29 +61,29 @@ class Auto(object):
 	def init_attribute_objects(self):
 		
 		#Grep
-		self.GrepAttribute		= Attribute("find","string")
+		self.GrepAttribute		= Attribute("find")
 		#Filename
-		self.Filename			= Attribute("file","string")
+		self.Filename			= Attribute("file")
 		#job file
-		self.JobFile			= Attribute("jobfile","string")
+		self.JobFile			= Attribute("jobfile")
 		#volume diff
-		self.VolumeDifference	= FloatAttribute("volume_difference" , "float" , 0.0)
+		self.VolumeDifference	= FloatAttribute("volume_difference" , 0.0)
 		#Max interations
-		self.MaxIterations		= IntAttribute("max_iterations" , "int" , 10)
+		self.MaxIterations		= IntAttribute("max_iterations" , 10)
 		#User name
-		self.Username			= Attribute("username","string")
+		self.Username			= Attribute("username")
 		#Program Verbosity
-		self.Verbose			= BooleanAttribute("verbose" , "boolean" , True)
+		self.Verbose			= BooleanAttribute("verbose" , True)
 		#Delete file
-		self.DeleteFile			= Attribute("delete_file_strict","string")
+		self.DeleteFile			= Attribute("delete_file_strict")
 		#Deletes a file that contains a portion of this string
-		self.DeleteFileContains	= Attribute("delete_file_which_contains","string")
+		self.DeleteFileContains	= Attribute("delete_file_which_contains")
 		#check_for_error
-		self.ErrorFile			= Attribute("error_file","string")
+		self.ErrorFile			= Attribute("error_file")
 		#when_error
-		self.DoWhenError		= Attribute("do_when_error","string")
+		self.DoWhenError		= Attribute("do_when_error")
 		#error
-		self.ErrorString		= Attribute("error","string")
+		self.ErrorString		= Attribute("error")
 		
 		
 		self.objlist = []
