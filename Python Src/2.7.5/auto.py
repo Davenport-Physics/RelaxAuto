@@ -28,6 +28,74 @@ from attributes import *
 from strmanipulation import *
 
 
+"""
+
+The Auto class is not a class you want to have more than one instance of.
+Primarily because it's not a class that increases code reusability, but a
+class that allows data to be easily shared amongst several members that
+are more or less related to each other.
+
+My efforts to make this program more modular are certainly not reflected
+by this class, and I imagine that it will eventually take other forms,
+hopefully for the better.
+
+Instead of describing the entire class in a general situation, like I
+tried to do with the Attributes class, I will go in depth about each
+member function as there may be some subtleties that could be potentially
+misinterpreted or entirely missed.
+
+	__init__(self)
+	
+This is a fairly simple function. It is not passed any data, and it
+of course is the constructor for this class, so evidently it's primary
+purpose is to initialize member variables so that the script may do
+some meaningful functions.
+
+It starts out by calling four functions, all of which are required in order
+to effectively use an instance of this class.
+
+	read_init_file(self)
+	
+This reads is all of the attributes within the autoinit config file,
+and places the data into a list called self.InitData. The variables within
+the list are all string variables.
+
+	init_attribute_objects(self)
+	
+This function initializes a variety of Attribute objects that will be
+used throughout the script. If you're planning on making any additions
+to the code base, this is usually the best place to start. Particularly
+if you plan on just adding a new attribute to the autoinit config file.
+
+A list with every Attribute Object is created, called self.objlist.
+This list reduces the amount of code through the class substantionally.
+Use it if you're looking for a attribute determined at runtime, otherwise
+it's probably best to use the Attribute objects directly by their name
+to reduce code ambiguity.
+
+	determine_init_attributes(self)
+	
+This function is poorly worded, and will probably be changed to something
+less ambiguous later on.
+
+The self.InitData list, which was obtained by the read_init_file function,
+will now begin being processed. By that, I mean that the data stored
+in each member of the list will be transferred to their respective
+Attribute object.
+
+This is achieved by the Attribute name, which was given to each Attribute
+object during initialization. Note, I'm not speaking about the object name,
+but the name of the Attribute it's representating.
+
+A for loop is ran, where the Attribute name is compared to each member
+of the string. If it turns out that the Attribute name is within the string,
+and the Attribute boolean variable is still False, the AttributeString variable
+within the Object will be initialized. Afterwards the boolean variable will
+be set to True.
+
+
+
+"""
 class Auto(object):
 	
 	def __init__(self):
