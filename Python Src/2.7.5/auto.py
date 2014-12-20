@@ -389,7 +389,7 @@ def get_volume_difference(volume):
 def find_first_last_volume(lines , Verbose):
 	
 	FirstVolume = float(get_numerical_substring(get_char_index(':',lines[1])+1,lines[1]))
-	LastVolume	= float(get_numerical_substring(get_char_index(':',lines[len(lines)-1])+1,lines[len(lines)-1]))
+	LastVolume	= float(get_numerical_substring(get_char_index(':',lines[-1])+1,lines[-1]))
 	
 	return [FirstVolume,LastVolume]
 

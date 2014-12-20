@@ -28,11 +28,9 @@ import os
 #returns the first index of a character found within the string.
 def get_char_index(character, string):
 	
-	for i in range(len(string)):
+	if string.find(character) != -1:
 		
-		if string[i] == character:
-			
-			return i
+		return string.find(character)
 
 	return False
 
