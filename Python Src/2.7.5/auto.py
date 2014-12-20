@@ -150,7 +150,7 @@ class Auto(object):
 					
 					if 'string' in self.objlist[i].get_attribute_type(): 
 						
-						self.objlist[i].set_attribute(len(get_attribute_substring(self.objlist[i].get_name())) , x))
+						self.objlist[i].set_attribute(get_attribute_substring(len(self.objlist[i].get_name()) , x))
 						self.objlist[i].set_boolean(True)
 						
 						
@@ -196,7 +196,7 @@ class Auto(object):
 		#When one is found to be a boolean type, then this command will not
 		#function properly and therefore to prevent it from running. Therefore
 		#all three variables are then set to False
-		if type(self.ErrorFile.get_attribute()) is bool or type(self.ErrorString.get_attribute()) is bool or type(self.WhenError.get_attribute()) is bool:
+		if type(self.ErrorFile.get_attribute()) is bool or type(self.ErrorString.get_attribute()) is bool or type(self.DoWhenError.get_attribute()) is bool:
 			
 			self.ErrorFile.set_boolean(False)
 			self.ErrorString.set_boolean(False)
@@ -244,7 +244,7 @@ class Auto(object):
 					
 		try:
 						
-			self.Verbose = bool(get_attribute_substring( len('verbose') , x) )
+			self.Verbose.set_attribute(bool(get_attribute_substring( len('verbose') , x)))
 			
 			return True
 						
@@ -257,9 +257,9 @@ class Auto(object):
 	
 	def get_attribute_by_name(self , name):
 		
-		for x in range( len( self.objlist ) ):
+		for i in range( len( self.objlist ) ):
 			
-			if name in self.objlist[i]:
+			if name in self.objlist[i].get_name():
 				
 				return self.objlist[i].get_attribute()
 				
@@ -379,8 +379,8 @@ def check_volume_difference(obj):
 	
 def find_first_last_volume(lines , Verbose):
 	
-	FirstVolume = float(get_attribute_substring(get_char_index(':',lines[1])+1,lines[1]))
-	LastVolume	= float(get_attribute_substring(get_char_index(':',lines[len(lines)-1])+1,lines[len(lines)-1]))
+	FirstVolume = float(get_numerical_substring(get_char_index(':',lines[1])+1,lines[1]))
+	LastVolume	= float(get_numerical_substring(get_char_index(':',lines[len(lines)-1])+1,lines[len(lines)-1]))
 	
 	return [FirstVolume,LastVolume]
 

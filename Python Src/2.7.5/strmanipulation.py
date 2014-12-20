@@ -112,6 +112,19 @@ def get_attribute_substring(StartIndex , x):
 			
 			return x[i:len(x)-1]
 			
+			
+def get_numerical_substring(StartIndex , x):
+	
+	for i in range(StartIndex , len(x)):
+		
+		if x[i] == ' ':
+			
+			continue
+			
+		else:
+			
+			return x[i:len(x)]
+			
 
 #Checks to see if there are any illegal commands found within the filename
 #that can cause the deletion of a large set of data at once.
