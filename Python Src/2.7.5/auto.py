@@ -149,6 +149,7 @@ class Auto(object):
 				if self.objlist[i].get_name() in x and self.objlist[i].get_boolean() == False:
 					
 					self.objlist[i].initialize_attribute(x)
+					self.set_boolean(True)
 					
 	
 	#checks to make that specific attributes are within the autoinit
@@ -173,7 +174,7 @@ class Auto(object):
 			
 			self.ErrorFile.set_boolean(False)
 			self.ErrorString.set_boolean(False)
-			self.WhenError.set_boolean(False)
+			self.DoWhenError.set_boolean(False)
 			
 			
 	def get_attribute_by_name(self , name):

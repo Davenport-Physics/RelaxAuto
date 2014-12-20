@@ -40,7 +40,7 @@ class Attribute:
 		
 		try:
 			
-			self.set_attribute(get_attribute_substring(len(self.name)),string)
+			self.set_attribute(get_attribute_substring(len(self.name),string))
 			
 		except:
 			
@@ -87,7 +87,7 @@ class IntAttribute(Attribute):
 		
 		try:
 			
-			temp = int(get_attribute_substring( len(self.name), string) )
+			temp = int(get_attribute_substring( len(self.name), string))
 			
 			self.set_attribute(temp)
 			
@@ -114,7 +114,7 @@ class BooleanAttribute(Attribute):
 		
 		try:
 			
-			temp = bool(get_attribute_substring(len(self.name)), string)
+			temp = bool(get_attribute_substring(len(self.name), string))
 			self.set_attribute(temp)
 			
 		except:
