@@ -49,7 +49,8 @@ def run_automation(obj):
 	
 	#Filename will hold the string of file/s to be deleted after
 	#each iteration
-	Filename = obj.get_files_to_be_deleted()
+	Filename 		= obj.get_files_to_be_deleted()
+	PreviousVolume	= 0.0
 	
 	for x in range(obj.get_attribute_by_name("max_iterations")):
 		
@@ -93,6 +94,12 @@ def run_automation(obj):
 		if check_volume_difference(obj) == True and HadErrors == False:
 			
 			break;
+			
+		if get_volume_difference(get_volumes(obj)) == PreviousVolume:
+			
+			make_call_with_string(obj.get_attribute_by_name("do_when_error"))
+			
+		PreviousVolume = get_volume_difference(get_volumes(obj))
 			
 		print("Iteration %d complete" % (x + 1))
 	
