@@ -210,7 +210,7 @@ class Auto:
 				if self.objlist[i].get_name() in x and self.objlist[i].get_boolean() == False:
 					
 					self.objlist[i].initialize_attribute(x)
-					self.set_boolean(True)
+					self.objlist[i].set_boolean(True)
 					
 	
 	## Halts execution if a required variable was not initialized.
@@ -364,7 +364,18 @@ def get_volumes(obj):
 	
 	lines = call_grep(obj.get_attribute_by_name("find"),obj.get_attribute_by_name("file"))
 	
+	"""
+	
+	TODO:
+	
+	This should probably be a Attribute within the autoinit.config file.
+	
 	return find_first_last_volume(lines , obj.get_attribute_by_name("verbose"))
+	
+	
+	"""
+	
+	return find_min_max_volume(lines,obj.get_attribute_by_name("verbose"))
 	
 
 ## Determines the absolute volume of a volume list
