@@ -29,7 +29,9 @@ from calls import *
 from time import sleep
 
 import threading
-import sys
+
+
+HaltExecution = False
 
 ## @package main
 #
@@ -68,12 +70,24 @@ def main():
 	return 0
 	
 def get_input():
-
-	user = str(input(""))
 	
-	if user == "q":
+	global HaltExecution
+	
+	while True:
+	
+		try:
+			
+			user = raw_input()
 		
-		sys.exit()
+		except:
+
+			user = str(input())
+	
+		if user == "q":
+			
+			HaltExecution = True
+		
+			raise SystemExit
 	
 	
 """
@@ -133,6 +147,8 @@ that the automated relaxation was finished.
 #  execution of the program.
 def run_automation(obj):
 	
+	global HaltExecution
+	
 	Verbose = obj.get_attribute_by_name("verbose")
 	
 	#Filename will hold the string of file/s to be deleted after
@@ -152,8 +168,12 @@ def run_automation(obj):
 		#Waits for the job to be finished
 		while obj.check_if_job_finished() == False:
 			
-			sleep(10)
-			interval += 10
+			if HaltExecution == True:
+				
+				raise SystemExit
+			
+			sleep(1)
+			interval += 1
 			if Verbose == True and interval % 20 == 0:
 				
 				print("%d seconds have passed" % (interval))
