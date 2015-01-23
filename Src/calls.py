@@ -319,7 +319,7 @@ def make_call(command):
 
 def make_subprocess_call(command):
 	
-	return str(sp.check_output(command,shell=True))
+	return str(sp.check_output(command, shell=True))
 
 
 def make_popen_call(command):

@@ -35,7 +35,7 @@ it returns a substring from that point on.
 """
 def delete_extra_spaces(string):
 	
-	for i in range(len(string)-1 , 0 , -1):
+	for i in range(len(string)-1, 0, -1):
 		
 		if string[i] != ' ':
 			
@@ -87,7 +87,7 @@ the string, while the other one has strings that are tabbed.
 """		
 def delete_tabs(string):
 	
-	return string.replace("\\t" , "")
+	return string.replace("\\t", "")
 
 """
 
@@ -117,7 +117,7 @@ function works as well, but for string substrings is beyond me at the moment.
 """			
 def get_numerical_substring(StartIndex , string):
 	
-	for i in range(StartIndex , len(string)):
+	for i in range(StartIndex, len(string)):
 		
 		if string[i] != ' ':
 			
@@ -182,7 +182,7 @@ def determine_most_recent_file(files):
 	
 	try:
 		
-		return max(files,key = os.path.getctime)
+		return max(files, key = os.path.getctime)
 		
 	except:
 

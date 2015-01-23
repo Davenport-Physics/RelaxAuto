@@ -218,7 +218,7 @@ def check_for_errors(obj):
 			
 		File 		= obj.get_attribute_by_name("error_file")
 		NewestFile	= determine_most_recent_file(get_files_which_contain_string(File))
-		hold 		= call_grep(CheckError , NewestFile)
+		hold 		= call_grep(CheckError, NewestFile)
 		
 		for x in hold:
 			

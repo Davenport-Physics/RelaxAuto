@@ -151,13 +151,13 @@ class Auto:
 		#job file
 		self.JobFile			= Attribute("jobfile")
 		#volume diff
-		self.VolumeDifference	= FloatAttribute("volume_difference" , 0.0)
+		self.VolumeDifference	= FloatAttribute("volume_difference", 0.0)
 		#Max interations
-		self.MaxIterations		= IntAttribute("max_iterations" , 10)
+		self.MaxIterations		= IntAttribute("max_iterations", 10)
 		#User name
 		self.Username			= Attribute("username")
 		#Program Verbosity
-		self.Verbose			= BooleanAttribute("verbose" , True)
+		self.Verbose			= BooleanAttribute("verbose", True)
 		#Delete file
 		self.DeleteFile			= Attribute("delete_file_strict")
 		#Deletes a file that contains a portion of this string
@@ -362,7 +362,7 @@ def check_volume_difference(obj):
 #  @return returns a list of floats.		
 def get_volumes(obj):
 	
-	lines = call_grep(obj.get_attribute_by_name("find"),obj.get_attribute_by_name("file"))
+	lines = call_grep(obj.get_attribute_by_name("find"), obj.get_attribute_by_name("file"))
 	
 	"""
 	
@@ -398,10 +398,10 @@ def get_volume_difference(volume):
 #	
 def find_first_last_volume(lines , Verbose):
 	
-	FirstVolume = float(get_numerical_substring(lines[1].find(":")+1,lines[1]))
-	LastVolume	= float(get_numerical_substring(lines[-1].find(":")+1,lines[-1]))
+	FirstVolume = float(get_numerical_substring(lines[1].find(":")+1, lines[1]))
+	LastVolume	= float(get_numerical_substring(lines[-1].find(":")+1, lines[-1]))
 	
-	return [FirstVolume,LastVolume]
+	return [FirstVolume, LastVolume]
 
 ## Finds the maximum and minimum volume in a list of strings
 #
@@ -421,8 +421,8 @@ def find_min_max_volume(lines,Verbose):
 
 	if Verbose == True:
 			
-		print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume,MinVolume))	
+		print("Max Volume found to be %f. Min Volume found to be %f" % (MaxVolume, MinVolume))	
 			
-	return [MaxVolume,MinVolume]
+	return [MaxVolume, MinVolume]
 		
 		
