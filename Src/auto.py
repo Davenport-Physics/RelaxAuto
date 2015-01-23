@@ -375,7 +375,17 @@ def get_volumes(obj):
 	
 	"""
 	
-	return find_min_max_volume(lines,obj.get_attribute_by_name("verbose"))
+	if obj.get_attribute_by_name("verbose") == True:
+		
+		print("Volumes\n")
+		
+		for x in range(1, len(lines)):
+			
+			print(lines[x])
+			
+		print("\n")
+	
+	return find_min_max_volume(lines, obj.get_attribute_by_name("verbose"))
 	
 
 ## Determines the absolute volume of a volume list
@@ -414,7 +424,7 @@ def find_min_max_volume(lines,Verbose):
 	volumes = []
 	for x in range(1 , len( lines )):
 		
-		volumes.append( float(get_attribute_substring(lines[x].find(":") + 1, lines[x])) )
+		volumes.append( float(get_numerical_substring(lines[x].find(":") + 1, lines[x])) )
 		
 	MaxVolume = max(volumes)
 	MinVolume = min(volumes)	

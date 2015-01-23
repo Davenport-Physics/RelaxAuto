@@ -28,6 +28,9 @@ from calls import *
 
 from time import sleep
 
+import threading
+import sys
+
 ## @package main
 #
 #  main file where the automation takes place. Usually this code
@@ -56,9 +59,22 @@ def main():
 	
 	obj = Auto()
 	
+	t = threading.Thread(target=get_input)
+	t.start()
+	
 	run_automation(obj)
 	
+	
 	return 0
+	
+def get_input():
+
+	user = str(input(""))
+	
+	if user == "q":
+		
+		sys.exit()
+	
 	
 """
 
@@ -173,7 +189,7 @@ def run_automation(obj):
 			
 		PreviousVolume = get_volume_difference(get_volumes(obj))
 			
-		print("Iteration %d complete" % (x + 1))
+		print("Iteration %d complete \n\n" % (x + 1))
 	
 	
 	

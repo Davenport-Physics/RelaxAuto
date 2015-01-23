@@ -92,11 +92,11 @@ class Attribute:
 	## Initializes the variable AttributeString.
 	#
 	#  This is the method that shouldd be called, instead of set_attribute
-	def initialize_attribute(self,string):
+	def initialize_attribute(self, string):
 		
 		try:
 			
-			self.set_attribute(get_attribute_substring(len(self.name),string))
+			self.set_attribute(get_attribute_substring(len(self.name), string))
 			
 		except:
 			
@@ -108,7 +108,7 @@ class Attribute:
 	#  method.	
 	def set_to_default_attribute(self):
 		
-		print("Setting %s to default attribute %s" % (self.name,str(self.DefaultAttribute)))
+		print("Setting %s to default attribute %s" % (self.name, str(self.DefaultAttribute)))
 		self.set_attribute(self.DefaultAttribute)
 	
 	## sets the variable AttributeString to the passed variable attribute
@@ -117,7 +117,7 @@ class Attribute:
 	#  method.
 	#
 	#  @param attribute can be any type of variable	
-	def set_attribute(self , attribute):
+	def set_attribute(self, attribute):
 		
 		self.AttributeString = attribute
 	
@@ -125,7 +125,7 @@ class Attribute:
 	#
 	#  @param boolean should be, as the name suggests, a boolean type.
 	#
-	def set_boolean(self , boolean):
+	def set_boolean(self, boolean):
 		
 		self.boolean = boolean
 	
@@ -154,7 +154,7 @@ class Attribute:
 #  variable will be of the int type.		
 class IntAttribute(Attribute):
 	
-	def initialize_attribute(self , string):
+	def initialize_attribute(self, string):
 		
 		try:
 			
@@ -171,11 +171,11 @@ class IntAttribute(Attribute):
 #  variable will be of the float type.			
 class FloatAttribute(Attribute):
 	
-	def initialize_attribute(self , string):
+	def initialize_attribute(self, string):
 		
 		try:
 			
-			temp = float(get_attribute_substring(len(self.name) , string))
+			temp = float(get_attribute_substring(len(self.name), string))
 			self.set_attribute(temp)
 			
 		except:
