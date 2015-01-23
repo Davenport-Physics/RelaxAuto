@@ -163,7 +163,8 @@ class IntAttribute(Attribute):
 			
 		except:
 			
-			self.set_default_attribute()
+			self.set_to_default_attribute()
+			
 ## @class FloatAttribute
 #
 #  Subclass of the Attribute Class. Use this if you know your AttributeString
