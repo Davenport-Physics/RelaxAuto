@@ -227,16 +227,19 @@ TODO possibility that the job file is not called job, and therefore
 this system call would have no effect.
 
 """
-def make_bsub_job():
+def make_bsub_job(jobfile):
+	
+	check_for_bad_strings(jobfile)
 		
 	try:
 			
-		command	= "bsub<job"
+		command	= "bsub<" + jobfile
 		hold	= make_call(command)
 			
 	except:
 			
-		print("Failed creating bsub job")
+		print("Failed submitting job")
+		os._exit(0)
 		
 	return hold
 		

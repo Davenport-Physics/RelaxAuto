@@ -154,6 +154,8 @@ class Auto:
 		self.VolumeDifference	= FloatAttribute("volume_difference", 0.0)
 		#Max interations
 		self.MaxIterations		= IntAttribute("max_iterations", 10)
+		#Halt when minimum number of volumes found
+		self.MinNumVolumes		= IntAttribute("minimum_number_of_volumes", 0)
 		#User name
 		self.Username			= Attribute("username")
 		#Program Verbosity
@@ -183,6 +185,7 @@ class Auto:
 		self.objlist.append(self.ErrorFile)
 		self.objlist.append(self.DoWhenError)
 		self.objlist.append(self.ErrorString)
+		self.objlist.append(self.MinNumVolumes)
 		
 	## Initializes all boolean and AttributeString variables in each Attribute Object
 	#
@@ -364,6 +367,10 @@ def get_volumes(obj):
 	
 	lines = call_grep(obj.get_attribute_by_name("find"), obj.get_attribute_by_name("file"))
 	
+	if obj.get_attribute_by_name("minimum_number_of_volumes") == len(lines) - 1:
+		
+		raise SystemExit
+	
 	"""
 	
 	TODO:
@@ -374,16 +381,6 @@ def get_volumes(obj):
 	
 	
 	"""
-	
-	if obj.get_attribute_by_name("verbose") == True:
-		
-		print("Volumes\n")
-		
-		for x in range(1, len(lines)):
-			
-			print(lines[x])
-			
-		print("\n")
 	
 	return find_min_max_volume(lines, obj.get_attribute_by_name("verbose"))
 	
@@ -408,8 +405,8 @@ def get_volume_difference(volume):
 #	
 def find_first_last_volume(lines , Verbose):
 	
-	FirstVolume = float(get_numerical_substring(lines[1].find(":")+1, lines[1]))
-	LastVolume	= float(get_numerical_substring(lines[-1].find(":")+1, lines[-1]))
+	FirstVolume = float(get_numerical_substring(lines[1].find(":") + 1, lines[1]))
+	LastVolume	= float(get_numerical_substring(lines[-1].find(":") + 1, lines[-1]))
 	
 	return [FirstVolume, LastVolume]
 
@@ -422,7 +419,7 @@ def find_first_last_volume(lines , Verbose):
 def find_min_max_volume(lines,Verbose):
 	
 	volumes = []
-	for x in range(1 , len( lines )):
+	for x in range(1, len( lines )):
 		
 		volumes.append( float(get_numerical_substring(lines[x].find(":") + 1, lines[x])) )
 		

@@ -29,6 +29,7 @@ from calls import *
 from time import sleep
 
 import threading
+import os
 
 
 HaltExecution = False
@@ -66,14 +67,24 @@ def main():
 	
 	run_automation(obj)
 	
-	
+	os._exit(0)
 	return 0
-	
+
+
+"""
+
+Handles user input, which allows the user to halt execution of the
+program during runtime. Originally, the only way to exit the program
+was to kill the task, which would require a second terminal to be opened.
+
+It has support for both python 2.x and 3.x
+
+"""	
 def get_input():
 	
 	global HaltExecution
 	
-	while True:
+	while HaltExecution == False:
 	
 		try:
 			
@@ -158,7 +169,7 @@ def run_automation(obj):
 	
 	for x in range(obj.get_attribute_by_name("max_iterations")):
 		
-		make_bsub_job()
+		make_bsub_job(obj.get_attribute_by_name("jobfile"))
 		
 		if Verbose == True:
 				
@@ -205,6 +216,10 @@ def run_automation(obj):
 			
 		if get_volume_difference(get_volumes(obj)) == PreviousVolume:
 			
+			if obj.get_attribute_by_name("verbose") == True:
+				
+				print("Running command " + obj.get_attribute_by_name("do_when_error") + " because volume difference did not change")
+				
 			make_call_with_string(obj.get_attribute_by_name("do_when_error"))
 			
 		PreviousVolume = get_volume_difference(get_volumes(obj))
@@ -214,6 +229,8 @@ def run_automation(obj):
 	
 	
 	print("Automated Relaxation finished")
+	
+	HaltExecution = True
 
 
 """
